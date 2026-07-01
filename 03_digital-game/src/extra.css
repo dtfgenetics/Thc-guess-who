@@ -1,0 +1,43 @@
+.data-health,
+.playtest-export {
+  border: 2px solid #21351f;
+  border-radius: 18px;
+  background: rgba(255, 252, 244, 0.96);
+  box-shadow: 0 12px 30px rgba(31, 42, 32, 0.12);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.data-health.is-valid {
+  border-color: #2f7d32;
+  background: #f0fff0;
+}
+
+.data-health.is-invalid {
+  border-color: #9b2424;
+  background: #fff3f1;
+}
+
+.playtest-export {
+  display: grid;
+  gap: 8px;
+}
+
+.playtest-export h2 {
+  margin: 0;
+}
+
+.playtest-export p {
+  margin: 0;
+  color: #51604d;
+}
+
+.playtest-export button {
+  min-height: 42px;
+  border: 2px solid #21351f;
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: #21351f;
+  color: #fffdf7;
+  font-weight: 800;
+}
