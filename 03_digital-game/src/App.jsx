@@ -11,6 +11,8 @@ import ResultPanel from './components/ResultPanel.jsx';
 import ModeSelector from './components/ModeSelector.jsx';
 import DebugPanel from './components/DebugPanel.jsx';
 import ItemTracker from './components/ItemTracker.jsx';
+import DataHealthPanel from './components/DataHealthPanel.jsx';
+import PlaytestExport from './components/PlaytestExport.jsx';
 
 import {
   answerQuestion,
@@ -20,8 +22,10 @@ import {
   makeAccusation,
   toggleEliminated
 } from './engine/gameEngine.js';
+import { validateGameData } from './engine/validateData.js';
 
 const PLAYER_IDS = ['Player 1', 'Player 2'];
+const validation = validateGameData({ suspects, items, questions });
 
 function createRoundState(mode) {
   if (mode === 'duel') {
@@ -172,6 +176,7 @@ export default function App() {
         <p>Ask yes/no questions, cross off suspects, and solve who took the missing item.</p>
       </header>
 
+      <DataHealthPanel validation={validation} />
       <ModeSelector mode={mode} onModeChange={handleModeChange} onNewGame={() => startNewGame()} />
 
       <section className="round-status">
@@ -210,6 +215,13 @@ export default function App() {
             onAccuse={handleAccuse}
           />
           <ResultPanel result={result} mystery={targetMystery} onNewGame={() => startNewGame()} />
+          <PlaytestExport
+            mode={roundState.mode}
+            activePlayer={roundState.activePlayer}
+            history={questionHistory}
+            result={result}
+            remainingCount={remainingSuspects.length}
+          />
           <DebugPanel
             mystery={targetMystery}
             mode={roundState.mode}
