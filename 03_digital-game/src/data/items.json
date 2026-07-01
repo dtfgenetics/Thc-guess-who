@@ -1,0 +1,72 @@
+[
+  {
+    "id": "item_bag",
+    "name": "Bag",
+    "tags": ["Carrying", "Hiding", "Pocket", "Stash", "Container"],
+    "flavorLine": "It was here a second ago.",
+    "traits": {
+      "carrying": true,
+      "hiding": true,
+      "pocket": true,
+      "containers": true,
+      "pouch": true
+    }
+  },
+  {
+    "id": "item_dabs",
+    "name": "Dabs",
+    "tags": ["Sticky", "Glass", "Tool", "Heat", "Concentrate"],
+    "flavorLine": "Someone left a sticky trail.",
+    "traits": {
+      "sticky": true,
+      "glass": true,
+      "tools": true,
+      "heat": true
+    }
+  },
+  {
+    "id": "item_lighter",
+    "name": "Lighter",
+    "tags": ["Flame", "Borrowing", "Pocket", "Smoke Tool", "Missing Again"],
+    "flavorLine": "Classic. It vanished again.",
+    "traits": {
+      "flame": true,
+      "heat": true,
+      "borrowing": true,
+      "pocket": true,
+      "smoke": true,
+      "tools": true
+    }
+  },
+  {
+    "id": "item_chocolate_bar",
+    "name": "Chocolate Bar",
+    "tags": ["Snack", "Wrapper", "Crumbs", "Sweet", "Munchies"],
+    "flavorLine": "Only the wrapper survived.",
+    "traits": {
+      "snack": true,
+      "sweet": true,
+      "chocolate": true,
+      "wrapper": true,
+      "crumbs": true,
+      "food": true,
+      "dessert": true,
+      "edible": true
+    }
+  },
+  {
+    "id": "item_gummies",
+    "name": "Gummies",
+    "tags": ["Candy", "Sticky", "Colorful", "Edible", "Sugar"],
+    "flavorLine": "The bag is empty and nobody is talking.",
+    "traits": {
+      "candy": true,
+      "sticky": true,
+      "colorful": true,
+      "edible": true,
+      "sugar": true,
+      "sweet": true,
+      "snack": true
+    }
+  }
+]
