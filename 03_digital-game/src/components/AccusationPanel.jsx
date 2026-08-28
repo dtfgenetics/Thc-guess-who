@@ -1,4 +1,4 @@
-export default function AccusationPanel({ suspects, items, selectedSuspectId, selectedItemId, onSelectSuspect, onSelectItem, onAccuse }) {
+export default function AccusationPanel({ suspects, items, selectedSuspectId, selectedItemId, onSelectSuspect, onSelectItem, onAccuse, itemSelectRef }) {
   return (
     <section className="accusation-panel" aria-labelledby="accusation-heading">
       <div className="panel-heading">
@@ -18,7 +18,7 @@ export default function AccusationPanel({ suspects, items, selectedSuspectId, se
 
       <label>
         Missing Item
-        <select value={selectedItemId} onChange={(event) => onSelectItem(event.target.value)}>
+        <select ref={itemSelectRef} value={selectedItemId} onChange={(event) => onSelectItem(event.target.value)}>
           <option value="">Choose an item...</option>
           {items.map((item) => (
             <option key={item.id} value={item.id}>{item.name}</option>
