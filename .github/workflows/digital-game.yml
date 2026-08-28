@@ -39,3 +39,6 @@ jobs:
 
       - name: Build app
         run: npm run build
+
+      - name: Verify production mystery privacy
+        run: node scripts/verify-production-build.mjs

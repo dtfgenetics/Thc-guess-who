@@ -26,6 +26,7 @@ import { validateGameData } from './engine/validateData.js';
 
 const PLAYER_IDS = ['Player 1', 'Player 2'];
 const validation = validateGameData({ suspects, items, questions });
+const SHOW_PLAYTEST_TOOLS = import.meta.env.DEV;
 
 function createRoundState(mode) {
   if (mode === 'duel') {
@@ -231,14 +232,16 @@ export default function App() {
             result={result}
             remainingCount={remainingSuspects.length}
           />
-          <DebugPanel
-            mystery={targetMystery}
-            mode={roundState.mode}
-            activePlayer={roundState.activePlayer}
-            remainingCount={remainingSuspects.length}
-            revealed={revealed}
-            onToggleReveal={() => setRevealed((value) => !value)}
-          />
+          {SHOW_PLAYTEST_TOOLS ? (
+            <DebugPanel
+              mystery={targetMystery}
+              mode={roundState.mode}
+              activePlayer={roundState.activePlayer}
+              remainingCount={remainingSuspects.length}
+              revealed={revealed}
+              onToggleReveal={() => setRevealed((value) => !value)}
+            />
+          ) : null}
         </aside>
       </div>
 
