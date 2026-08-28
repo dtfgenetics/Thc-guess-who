@@ -11,6 +11,8 @@ assert(app.includes('const accusationItemRef = useRef(null);'), 'quick accusatio
 assert(app.includes("itemSelect.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth'"), 'quick accusation should scroll to the item selector');
 assert(app.includes('itemSelect.focus({ preventScroll: true });'), 'quick accusation should focus the next required field');
 assert(app.includes('aria-live="polite"'), 'round status should announce player/remaining changes');
+assert(app.includes('const SHOW_PLAYTEST_TOOLS = import.meta.env.DEV;'), 'mystery reveal tools must be development-only');
+assert(app.includes('{SHOW_PLAYTEST_TOOLS ? ('), 'debug mystery reveal must be gated from production rendering');
 assert(accusation.includes('ref={itemSelectRef}'), 'missing item selector ref contract');
 assert(health.includes('if (validation.valid) return null;'), 'successful developer health banner should stay out of normal play');
 assert(health.includes('role="alert"'), 'invalid data should remain visible to players');
