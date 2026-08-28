@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "validate": "node scripts/validate-data.mjs",
-    "smoke": "node scripts/smoke-test.mjs"
+    "smoke": "node scripts/smoke-test.mjs && node scripts/validate-ui-polish.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^6.0.3",
