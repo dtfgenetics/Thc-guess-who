@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 import suspects from './data/suspects.json';
 import items from './data/items.json';
@@ -90,6 +90,7 @@ export default function App() {
   const [selectedItemId, setSelectedItemId] = useState('');
   const [result, setResult] = useState(null);
   const [revealed, setRevealed] = useState(false);
+  const accusationItemRef = useRef(null);
 
   const stateKey = getStateKey(roundState);
   const targetMystery = getTargetMystery(roundState);
@@ -148,8 +149,15 @@ export default function App() {
   }
 
   function handleQuickAccuse(suspectId) {
+    if (result) return;
     setSelectedSuspectId(suspectId);
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    window.requestAnimationFrame(() => {
+      const itemSelect = accusationItemRef.current;
+      if (!itemSelect) return;
+      const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      itemSelect.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'center' });
+      itemSelect.focus({ preventScroll: true });
+    });
   }
 
   function handleAccuse() {
@@ -179,7 +187,7 @@ export default function App() {
       <DataHealthPanel validation={validation} />
       <ModeSelector mode={mode} onModeChange={handleModeChange} onNewGame={() => startNewGame()} />
 
-      <section className="round-status">
+      <section className="round-status" aria-live="polite">
         <div>
           <strong>Active:</strong> {roundState.activePlayer}
         </div>
@@ -213,6 +221,7 @@ export default function App() {
             onSelectSuspect={setSelectedSuspectId}
             onSelectItem={setSelectedItemId}
             onAccuse={handleAccuse}
+            itemSelectRef={accusationItemRef}
           />
           <ResultPanel result={result} mystery={targetMystery} onNewGame={() => startNewGame()} />
           <PlaytestExport
