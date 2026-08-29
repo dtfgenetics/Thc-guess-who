@@ -1,21 +1,25 @@
 .data-health,
-.playtest-export {
-  border: 2px solid #21351f;
+.playtest-export,
+.debug-panel {
+  border: 1px solid rgba(225, 235, 211, 0.16);
   border-radius: 18px;
-  background: rgba(255, 252, 244, 0.96);
-  box-shadow: 0 12px 30px rgba(31, 42, 32, 0.12);
-  padding: 14px 16px;
-  margin-bottom: 16px;
+  background: rgba(12, 25, 17, 0.96);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.24);
+  padding: 15px 16px;
+  color: #f4f2e8;
+}
+
+.data-health {
+  margin-bottom: 12px;
 }
 
 .data-health.is-valid {
-  border-color: #2f7d32;
-  background: #f0fff0;
+  border-color: rgba(135, 220, 121, 0.48);
 }
 
 .data-health.is-invalid {
-  border-color: #9b2424;
-  background: #fff3f1;
+  border-color: rgba(239, 111, 96, 0.6);
+  background: rgba(75, 28, 24, 0.96);
 }
 
 .playtest-export {
@@ -23,21 +27,38 @@
   gap: 8px;
 }
 
-.playtest-export h2 {
+.playtest-export h2,
+.debug-panel h2 {
   margin: 0;
 }
 
-.playtest-export p {
+.playtest-export p,
+.debug-panel p {
   margin: 0;
-  color: #51604d;
+  color: #aeb8a9;
 }
 
-.playtest-export button {
+.playtest-export button,
+.debug-panel button {
   min-height: 42px;
-  border: 2px solid #21351f;
+  border: 1px solid rgba(225, 235, 211, 0.18);
   border-radius: 10px;
   padding: 8px 12px;
-  background: #21351f;
-  color: #fffdf7;
-  font-weight: 800;
+  background: #c9f46d;
+  color: #0a140d;
+  font-weight: 900;
+}
+
+.debug-panel summary {
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.debug-answer {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(242, 184, 75, 0.13);
+  border: 1px solid rgba(242, 184, 75, 0.45);
+  color: #f4f2e8;
 }
