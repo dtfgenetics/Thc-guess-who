@@ -1466,3 +1466,297 @@ button:disabled {
     transform: none;
   }
 }
+
+
+/* Premium case-board visual slice — authored depth before final character art */
+:root {
+  --glow: 0 0 0 1px rgba(201, 244, 109, 0.12), 0 0 34px rgba(201, 244, 109, 0.08);
+  --paper-shadow: 0 18px 34px rgba(0, 0, 0, 0.28), 0 2px 0 rgba(255,255,255,0.48) inset;
+}
+
+body {
+  background-attachment: fixed;
+}
+
+.case-app {
+  position: relative;
+  isolation: isolate;
+}
+
+.case-app::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 9%, rgba(201,244,109,0.07), transparent 31rem),
+    linear-gradient(115deg, transparent 0 47%, rgba(201,244,109,0.025) 48%, transparent 49% 100%);
+  mix-blend-mode: screen;
+}
+
+.case-header,
+.case-board,
+.question-deck,
+.evidence-locker,
+.history-panel,
+.clue-reveal,
+.accusation-dock {
+  position: relative;
+  isolation: isolate;
+}
+
+.case-header::before,
+.case-board::before,
+.question-deck::before,
+.evidence-locker::before,
+.history-panel::before,
+.clue-reveal::before,
+.accusation-dock::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(115deg, transparent 0 30%, rgba(255,255,255,0.026) 30.2%, transparent 30.5% 100%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.018) 0 1px, transparent 1px 4px);
+  opacity: 0.55;
+  mix-blend-mode: screen;
+}
+
+.case-header {
+  box-shadow: var(--shadow), 0 0 0 1px rgba(201,244,109,0.04), 0 0 70px rgba(58, 128, 75, 0.08);
+}
+
+.case-hero h1 {
+  text-shadow: 0 0 24px rgba(201,244,109,0.16), 0 3px 0 rgba(0,0,0,0.18);
+}
+
+.case-number {
+  position: relative;
+}
+
+.case-number::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin: 0 8px 1px 0;
+  border-radius: 50%;
+  background: var(--acid);
+  box-shadow: 0 0 12px var(--acid);
+  animation: status-blink 2.4s ease-in-out infinite;
+}
+
+@keyframes status-blink {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
+.suspect-grid {
+  perspective: 1200px;
+}
+
+.suspect-card {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.suspect-card:hover {
+  transform: translateY(-6px) rotateX(1.5deg) rotateY(-1deg);
+  z-index: 3;
+}
+
+.suspect-main {
+  box-shadow: var(--paper-shadow);
+  transition: box-shadow 180ms ease, filter 180ms ease, transform 180ms ease;
+}
+
+.suspect-main::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(105deg, transparent 0 42%, rgba(255,255,255,0.42) 48%, transparent 56%),
+    repeating-linear-gradient(0deg, rgba(16,32,22,0.035) 0 1px, transparent 1px 3px);
+  opacity: 0.7;
+  mix-blend-mode: multiply;
+  transform: translateX(-120%);
+  transition: transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.suspect-card:hover .suspect-main::before {
+  transform: translateX(120%);
+}
+
+.suspect-avatar {
+  height: 106px;
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12), 0 10px 18px rgba(0,0,0,0.16);
+  transition: filter 180ms ease, box-shadow 180ms ease;
+}
+
+.suspect-avatar::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background:
+    linear-gradient(105deg, transparent 18%, rgba(255,255,255,0.18) 34%, transparent 47%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 5px);
+  mix-blend-mode: screen;
+  opacity: 0.75;
+}
+
+.suspect-avatar::after {
+  content: "";
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  left: -74px;
+  bottom: -112px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  box-shadow: 0 0 0 14px rgba(255,255,255,0.035), 0 0 0 28px rgba(255,255,255,0.025);
+}
+
+.avatar-head {
+  z-index: 1;
+  box-shadow:
+    8px -5px 0 -4px hsla(var(--avatar-hue), 80%, 76%, 0.45),
+    inset -5px -3px 0 rgba(0,0,0,0.13);
+}
+
+.avatar-head::after {
+  content: "";
+  position: absolute;
+  width: 42px;
+  height: 17px;
+  top: -6px;
+  left: -2px;
+  border-radius: 70% 35% 10% 20%;
+  background: hsl(calc(var(--avatar-hue) + 28) 22% 13% / 0.9);
+  transform: rotate(-9deg);
+}
+
+.avatar-body {
+  z-index: 1;
+  box-shadow: inset 0 8px 0 rgba(255,255,255,0.04);
+}
+
+.avatar-body::before,
+.avatar-body::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  width: 2px;
+  height: 35px;
+  background: hsla(var(--avatar-hue), 70%, 78%, 0.22);
+}
+
+.avatar-body::before { left: 22px; transform: rotate(19deg); }
+.avatar-body::after { right: 22px; transform: rotate(-19deg); }
+
+.suspect-avatar > b {
+  text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+}
+
+.suspect-card:hover .suspect-avatar {
+  filter: saturate(1.18) brightness(1.08);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2), 0 0 0 1px hsla(var(--avatar-hue), 70%, 72%, 0.28), 0 12px 24px rgba(0,0,0,0.24);
+}
+
+.accuse-chip {
+  box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+}
+
+.accuse-chip:active,
+.question-list button:active,
+.evidence-card:active,
+.mode-pills button:active,
+.accusation-launch:active,
+.lock-accusation:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.question-list button,
+.evidence-card {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.045);
+}
+
+.question-list button:not(.is-used):hover,
+.evidence-card:hover:not(.is-eliminated) {
+  box-shadow: var(--glow), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.clue-reveal.is-yes,
+.clue-reveal.is-no {
+  animation: clue-arrival 340ms cubic-bezier(0.2, 0.85, 0.25, 1) both;
+}
+
+@keyframes clue-arrival {
+  from { opacity: 0.4; transform: translateY(5px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.evidence-icon {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 0 20px rgba(201,244,109,0.08);
+}
+
+.accusation-dock {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 84% 50%, rgba(201,244,109,0.12), transparent 18rem),
+    rgba(12,25,17,0.94);
+}
+
+.accusation-launch {
+  box-shadow: 0 0 0 1px rgba(201,244,109,0.12), 0 12px 30px rgba(0,0,0,0.22);
+}
+
+.resolution-backdrop,
+.drawer-backdrop {
+  backdrop-filter: blur(15px) saturate(1.12);
+}
+
+.case-resolution,
+.accusation-drawer {
+  box-shadow: 0 34px 110px rgba(0,0,0,0.62), 0 0 0 1px rgba(201,244,109,0.1);
+}
+
+.resolution-seal {
+  box-shadow: 0 0 0 10px rgba(201,244,109,0.035), 0 0 32px rgba(201,244,109,0.18);
+}
+
+.suspect-card.is-eliminated {
+  filter: grayscale(0.78) saturate(0.55);
+}
+
+.suspect-card.is-eliminated .suspect-main::after {
+  box-shadow: inset 0 0 0 2px rgba(233,94,77,0.38), inset 0 0 50px rgba(233,94,77,0.12);
+}
+
+@media (max-width: 620px) {
+  .suspect-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .suspect-avatar {
+    height: 92px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .case-number::before {
+    animation: none;
+  }
+
+  .suspect-card:hover .suspect-main::before {
+    transform: none;
+  }
+}
