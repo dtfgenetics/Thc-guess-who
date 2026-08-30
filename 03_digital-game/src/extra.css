@@ -62,3 +62,66 @@
   border: 1px solid rgba(242, 184, 75, 0.45);
   color: #f4f2e8;
 }
+
+/* Production mobile containment. The case board must fit the viewport without
+   clipping dossier cards, HUD controls, or the detective rail. */
+html,
+body,
+#root,
+.case-app,
+.case-header,
+.case-workspace,
+.case-board,
+.detective-rail,
+.mode-bar,
+.case-hud {
+  max-width: 100%;
+  min-width: 0;
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+.case-nav,
+.case-nav-actions,
+.mode-pills,
+.section-title-row,
+.accusation-dock {
+  min-width: 0;
+}
+
+@media (max-width: 620px) {
+  .case-nav {
+    gap: 10px;
+  }
+
+  .case-nav-actions {
+    max-width: 52%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .ghost-button {
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  .mode-pills {
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+
+  .mode-pills button {
+    min-width: 0;
+  }
+
+  .suspect-card,
+  .suspect-main,
+  .question-list button,
+  .evidence-card {
+    max-width: 100%;
+    min-width: 0;
+  }
+}
