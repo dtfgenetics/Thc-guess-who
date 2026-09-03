@@ -7,6 +7,7 @@ import {
   makeAccusation,
   toggleEliminated
 } from '../src/engine/gameEngine.js';
+import { clearSavedGame, loadSavedGame, saveGame } from '../src/engine/storage.js';
 
 const suspects = readJson('src/data/suspects.json');
 const items = readJson('src/data/items.json');
@@ -56,6 +57,15 @@ if (eliminated.includes('suspect_001')) failures.push('toggleEliminated failed t
 
 const remaining = getRemainingSuspects(suspects, ['suspect_001']);
 if (remaining.length !== 24) failures.push(`Expected 24 remaining suspects, found ${remaining.length}.`);
+
+try {
+  saveGame({ mode: 'solo', roundState: { mode: 'solo' } });
+  clearSavedGame();
+  const saved = loadSavedGame();
+  if (saved !== null) failures.push('storage helpers should be inert in non-browser smoke tests.');
+} catch (error) {
+  failures.push(`storage helpers should not throw without browser storage: ${error.message}`);
+}
 
 if (failures.length > 0) {
   console.error('Who Took It? smoke test failed:');
