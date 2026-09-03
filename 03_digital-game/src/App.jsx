@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import suspects from './data/suspects.json';
 import items from './data/items.json';
@@ -17,11 +17,13 @@ import {
   toggleEliminated
 } from './engine/gameEngine.js';
 import { validateGameData } from './engine/validateData.js';
+import { loadSavedGame, saveGame } from './engine/storage.js';
 
 const PLAYER_IDS = ['Player 1', 'Player 2'];
 const QUESTION_CATEGORIES = [...new Set(questions.map((question) => question.category))];
 const validation = validateGameData({ suspects, items, questions });
 const SHOW_PLAYTEST_TOOLS = import.meta.env.DEV;
+const ALLOWED_MODES = new Set(['solo', 'shared', 'duel']);
 
 const LANE_META = {
   Bag: { short: 'BAG', icon: '▰' },
@@ -73,6 +75,13 @@ function createRoundState(mode) {
   };
 }
 
+function getInitialSession() {
+  const saved = loadSavedGame();
+  if (!saved || !ALLOWED_MODES.has(saved.mode)) return null;
+  if (!saved.roundState || saved.roundState.mode !== saved.mode) return null;
+  return saved;
+}
+
 function getStateKey(roundState) {
   return roundState.mode === 'duel' ? roundState.activePlayer : 'shared';
 }
@@ -109,14 +118,17 @@ function itemMeta(item) {
 }
 
 export default function App() {
-  const [mode, setMode] = useState('solo');
-  const [roundState, setRoundState] = useState(() => createRoundState('solo'));
-  const [selectedSuspectId, setSelectedSuspectId] = useState('');
-  const [selectedItemId, setSelectedItemId] = useState('');
-  const [result, setResult] = useState(null);
+  const [savedSession] = useState(() => getInitialSession());
+  const [mode, setMode] = useState(savedSession?.mode || 'solo');
+  const [roundState, setRoundState] = useState(() => savedSession?.roundState || createRoundState(savedSession?.mode || 'solo'));
+  const [selectedSuspectId, setSelectedSuspectId] = useState(savedSession?.selectedSuspectId || '');
+  const [selectedItemId, setSelectedItemId] = useState(savedSession?.selectedItemId || '');
+  const [result, setResult] = useState(savedSession?.result || null);
   const [revealed, setRevealed] = useState(false);
-  const [questionCategory, setQuestionCategory] = useState(QUESTION_CATEGORIES[0]);
-  const [latestClue, setLatestClue] = useState(null);
+  const [questionCategory, setQuestionCategory] = useState(
+    QUESTION_CATEGORIES.includes(savedSession?.questionCategory) ? savedSession.questionCategory : QUESTION_CATEGORIES[0]
+  );
+  const [latestClue, setLatestClue] = useState(savedSession?.latestClue || null);
   const [accusationOpen, setAccusationOpen] = useState(false);
   const accusationItemRef = useRef(null);
 
@@ -140,6 +152,18 @@ export default function App() {
   );
   const selectedSuspect = suspects.find((suspect) => suspect.id === selectedSuspectId);
   const selectedItem = items.find((item) => item.id === selectedItemId);
+
+  useEffect(() => {
+    saveGame({
+      mode,
+      roundState,
+      selectedSuspectId,
+      selectedItemId,
+      result,
+      questionCategory,
+      latestClue
+    });
+  }, [mode, roundState, selectedSuspectId, selectedItemId, result, questionCategory, latestClue]);
 
   function startNewGame(nextMode = mode) {
     setMode(nextMode);
