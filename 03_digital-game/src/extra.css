@@ -49,6 +49,26 @@
   font-weight: 900;
 }
 
+.copy-status {
+  color: #c9f46d;
+}
+
+.copy-fallback {
+  display: grid;
+  gap: 6px;
+  color: #f4f2e8;
+}
+
+.copy-fallback textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid rgba(225, 235, 211, 0.22);
+  border-radius: 12px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f4f2e8;
+}
+
 .debug-panel summary {
   cursor: pointer;
   font-weight: 900;
