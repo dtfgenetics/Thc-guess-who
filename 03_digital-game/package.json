@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "validate": "node scripts/validate-data.mjs",
-    "smoke": "node scripts/smoke-test.mjs && node scripts/validate-ui-polish.mjs"
+    "source:audit": "node scripts/source-audit.mjs",
+    "smoke": "node scripts/smoke-test.mjs && node scripts/validate-ui-polish.mjs && npm run source:audit"
   },
   "dependencies": {
     "react": "^19.2.8",
