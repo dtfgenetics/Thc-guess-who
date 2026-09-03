@@ -42,3 +42,9 @@ jobs:
 
       - name: Verify production mystery privacy
         run: node scripts/verify-production-build.mjs
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: who-took-it-digital-game-dist
+          path: 03_digital-game/dist
