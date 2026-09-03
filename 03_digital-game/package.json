@@ -11,10 +11,14 @@
     "smoke": "node scripts/smoke-test.mjs && node scripts/validate-ui-polish.mjs"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "^6.0.3",
-    "vite": "^8.1.2",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "vite": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=22"
+  }
 }
