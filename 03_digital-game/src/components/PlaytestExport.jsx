@@ -1,5 +1,10 @@
+import { useMemo, useState } from 'react';
+
 export default function PlaytestExport({ mode, activePlayer, history, result, remainingCount }) {
-  function copySummary() {
+  const [copied, setCopied] = useState(false);
+  const [copyFailed, setCopyFailed] = useState(false);
+
+  const summary = useMemo(() => {
     const lines = [
       'Who Took It? Playtest Summary',
       `Mode: ${mode}`,
@@ -12,7 +17,24 @@ export default function PlaytestExport({ mode, activePlayer, history, result, re
       ...history.map((entry, index) => `${index + 1}. ${entry.question.text} — ${entry.answerLabel}`)
     ];
 
-    navigator.clipboard?.writeText(lines.join('\n'));
+    return lines.join('\n');
+  }, [activePlayer, history, mode, remainingCount, result]);
+
+  async function copySummary() {
+    setCopied(false);
+    setCopyFailed(false);
+
+    try {
+      if (!navigator.clipboard?.writeText) {
+        throw new Error('Clipboard API unavailable.');
+      }
+
+      await navigator.clipboard.writeText(summary);
+      setCopied(true);
+    } catch (error) {
+      console.warn('Unable to copy playtest summary.', error);
+      setCopyFailed(true);
+    }
   }
 
   return (
@@ -20,6 +42,13 @@ export default function PlaytestExport({ mode, activePlayer, history, result, re
       <h2>Playtest Export</h2>
       <p>Copy a quick round summary for the playtest folder.</p>
       <button type="button" onClick={copySummary}>Copy Summary</button>
+      {copied ? <strong className="copy-status">Copied.</strong> : null}
+      {copyFailed ? (
+        <label className="copy-fallback">
+          Copy manually
+          <textarea readOnly value={summary} rows={8} />
+        </label>
+      ) : null}
     </section>
   );
 }
