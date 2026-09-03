@@ -2,7 +2,7 @@
 
 ## Current Status
 
-The digital game prototype is in `03_digital-game/` and has moved beyond a skeleton. It now has playable single-player, shared mystery, and local duel flows.
+The digital game prototype is in `03_digital-game/` and has moved beyond a skeleton. It now has playable single-player, shared mystery, and local duel flows plus a hardening layer for save/resume, crash recovery, dependency/source checks, and production privacy.
 
 ## Do Not Change
 
@@ -27,7 +27,7 @@ The digital game prototype is in `03_digital-game/` and has moved beyond a skele
 - single-player mode
 - shared mystery / host mode
 - local 2-player pass-the-device duel mode
-- local browser save/resume
+- local browser save/resume with schema versioning
 - crash-safe ErrorBoundary recovery
 - development-only mystery reveal tools
 - playtest summary export with clipboard fallback
@@ -35,6 +35,7 @@ The digital game prototype is in `03_digital-game/` and has moved beyond a skele
 - production mystery privacy check
 - GitHub Actions validate/smoke/audit/build workflow
 - CI build artifact upload
+- configurable Vite production base path
 
 ## Run Commands
 
@@ -64,7 +65,11 @@ The GitHub Actions workflow should run:
 ## Most Important Files
 
 ```text
+03_digital-game/package.json
+03_digital-game/vite.config.js
 03_digital-game/src/App.jsx
+03_digital-game/src/main.jsx
+03_digital-game/src/components/ErrorBoundary.jsx
 03_digital-game/src/engine/gameEngine.js
 03_digital-game/src/engine/storage.js
 03_digital-game/src/engine/validateData.js
@@ -75,6 +80,7 @@ The GitHub Actions workflow should run:
 03_digital-game/scripts/validate-ui-polish.mjs
 03_digital-game/scripts/source-audit.mjs
 03_digital-game/scripts/verify-production-build.mjs
+.github/workflows/digital-game.yml
 ```
 
 ## Known Non-Blocking Limitations
@@ -91,8 +97,8 @@ The GitHub Actions workflow should run:
 
 1. Run the GitHub Actions workflow and inspect logs.
 2. Add a browser interaction test or manual browser QA checklist.
-3. Add final placeholder art components without external images.
-4. Add a mode help panel explaining Solo, Group, and Duel.
+3. Add a mode help panel explaining Solo, Group, and Duel.
+4. Add final placeholder art components without external images.
 5. Add local score/playtest metrics.
 6. Decide deployment target for dtfseeds.com `/games/who-took-it/`.
 
