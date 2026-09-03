@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "validate": "node scripts/validate-data.mjs",
     "source:audit": "node scripts/source-audit.mjs",
+    "balance": "node scripts/balance-report.mjs",
     "smoke": "node scripts/smoke-test.mjs && node scripts/validate-ui-polish.mjs && npm run source:audit"
   },
   "dependencies": {
