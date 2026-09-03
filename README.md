@@ -19,7 +19,7 @@ This repository is the project home for the physical printable prototype, game m
 ## Current Version
 
 **Printable Prototype:** v0.8  
-**Digital Prototype:** v0.1 React/Vite app added
+**Digital Prototype:** v0.1 React/Vite app hardened
 
 Final character art should wait until playtesting confirms the rules, clue balance, and mode structure.
 
@@ -44,7 +44,10 @@ Validation and build:
 
 ```bash
 npm run validate
+npm run smoke
+npm audit
 npm run build
+node scripts/verify-production-build.mjs
 ```
 
 Current digital features:
@@ -59,8 +62,13 @@ Current digital features:
 - single-player mode
 - shared mystery / host mode
 - local 2-player duel mode
+- local browser save/resume
+- crash-safe error boundary
 - data validation
+- source/IP audit
+- production mystery privacy check
 - playtest export tool
+- GitHub Actions build artifact upload
 
 ## Core Rule
 
