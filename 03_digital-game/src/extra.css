@@ -156,6 +156,111 @@ body {
   min-width: 0;
 }
 
+/* Non-cheating information-gain assistant. This sits inside the existing clue
+   deck and never reads or displays the hidden mystery. */
+.best-lead-assist {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  margin: 12px 0 14px;
+  padding: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(242, 184, 75, 0.36);
+  border-radius: 15px;
+  background:
+    radial-gradient(circle at 0 0, rgba(242, 184, 75, 0.12), transparent 14rem),
+    linear-gradient(145deg, rgba(34, 37, 22, 0.98), rgba(12, 25, 17, 0.98));
+  box-shadow: inset 3px 0 0 rgba(242, 184, 75, 0.72);
+}
+
+.best-lead-assist[hidden] {
+  display: none !important;
+}
+
+.best-lead-assist::after {
+  content: "↗";
+  position: absolute;
+  right: 78px;
+  top: -14px;
+  color: rgba(242, 184, 75, 0.08);
+  font-size: 5rem;
+  font-weight: 1000;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.best-lead-copy {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.best-lead-kicker {
+  display: block;
+  color: #f2b84b;
+  font-size: 0.61rem;
+  font-weight: 950;
+  letter-spacing: 0.13em;
+}
+
+.best-lead-copy > strong {
+  display: block;
+  margin-top: 3px;
+  color: #f4f2e8;
+  font-size: 0.86rem;
+}
+
+.best-lead-copy p {
+  margin: 4px 0 3px;
+  color: #e8eee1;
+  font-size: 0.8rem;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.best-lead-copy small {
+  display: block;
+  color: #93a490;
+  font-size: 0.66rem;
+  line-height: 1.35;
+}
+
+.best-lead-action {
+  position: relative;
+  z-index: 1;
+  min-height: 46px;
+  border: 1px solid rgba(201, 244, 109, 0.38);
+  border-radius: 11px;
+  padding: 8px 12px;
+  background: linear-gradient(145deg, #c9f46d, #a8d856);
+  color: #0a140d;
+  font-weight: 950;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+}
+
+.best-lead-action:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.best-lead-action:focus-visible {
+  outline: 3px solid #f2b84b;
+  outline-offset: 3px;
+}
+
+.best-lead-assist[data-target="item"] {
+  border-color: rgba(113, 189, 232, 0.4);
+  box-shadow: inset 3px 0 0 rgba(113, 189, 232, 0.76);
+}
+
+.best-lead-assist[data-target="item"] .best-lead-kicker {
+  color: #8fd1f1;
+}
+
 @media (max-width: 620px) {
   .case-nav {
     gap: 10px;
@@ -187,5 +292,32 @@ body {
   .evidence-card {
     max-width: 100%;
     min-width: 0;
+  }
+
+  .best-lead-assist {
+    position: sticky;
+    top: 8px;
+    z-index: 8;
+    grid-template-columns: minmax(0, 1fr) 88px;
+    margin-inline: -2px;
+    backdrop-filter: blur(10px);
+  }
+
+  .best-lead-copy p {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .best-lead-action {
+    min-height: 52px;
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .best-lead-action {
+    transition: none !important;
   }
 }
