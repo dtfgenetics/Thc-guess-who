@@ -10,8 +10,11 @@ const errorBoundary = read('src/components/ErrorBoundary.jsx');
 const styles = read('src/styles.css');
 const extraStyles = read('src/extra.css');
 const storage = read('src/engine/storage.js');
+const engine = read('src/engine/gameEngine.js');
+const bestLeadUi = read('src/best-lead-ui.js');
 
 assert(main.includes('<ErrorBoundary>') && main.includes('</ErrorBoundary>'), 'app must be wrapped in ErrorBoundary');
+assert(main.includes("import './best-lead-ui.js';"), 'best-lead progressive UI layer must load from the canonical entrypoint');
 assert(app.includes('const accusationItemRef = useRef(null);'), 'quick accusation focus ref missing');
 assert(app.includes("itemSelect.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth'"), 'quick accusation should scroll to the item selector');
 assert(app.includes('itemSelect.focus({ preventScroll: true });'), 'quick accusation should focus the next required field');
@@ -29,5 +32,21 @@ assert(styles.includes('prefers-reduced-motion'), 'reduced motion support is req
 assert(extraStyles.includes('.error-screen'), 'error boundary must have visible fallback styling');
 assert(storage.includes('SCHEMA_VERSION'), 'saved game schema version missing');
 assert(storage.includes('window.localStorage'), 'storage helper must use browser localStorage only behind guards');
+
+assert(engine.includes('export function scoreQuestionSplit('), 'deduction engine must expose pure question split scoring');
+assert(engine.includes('export function getBestLead('), 'deduction engine must expose best-lead ranking');
+assert(engine.includes('(2 * yesCount * noCount) / total'), 'best-lead ranking must use candidate split information rather than hidden mystery state');
+assert(!bestLeadUi.includes('getTargetMystery'), 'best-lead UI must not read the hidden mystery helper');
+assert(!bestLeadUi.includes('.mysteries'), 'best-lead UI must not inspect saved mystery identities');
+assert(bestLeadUi.includes('getBestLead('), 'best-lead UI must use the pure ranking engine');
+assert(bestLeadUi.includes('loadSavedGame()'), 'best-lead UI should use saved player deduction state');
+assert(bestLeadUi.includes('eliminatedByPlayer') && bestLeadUi.includes('eliminatedItemsByPlayer'), 'assistant must rank from player-eliminated state');
+assert(bestLeadUi.includes('historyByPlayer'), 'assistant must exclude questions already asked by the active player');
+assert(bestLeadUi.includes('askThroughExistingControls'), 'assistant must route asking through existing React controls');
+assert(bestLeadUi.includes('.category-tabs button[role="tab"]'), 'assistant must preserve existing category selection path');
+assert(bestLeadUi.includes('.question-list button'), 'assistant must preserve existing question action path');
+assert(extraStyles.includes('.best-lead-assist'), 'best-lead assistant must have a visible case-file treatment');
+assert(extraStyles.includes('.best-lead-action:focus-visible'), 'best-lead action must preserve strong keyboard focus');
+assert(extraStyles.includes('@media (prefers-reduced-motion: reduce)'), 'best-lead layer must respect reduced motion');
 
 console.log('Who Took It? UI polish validation passed.');

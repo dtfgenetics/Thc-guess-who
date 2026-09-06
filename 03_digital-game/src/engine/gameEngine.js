@@ -52,6 +52,53 @@ export function getQuestionAnswerLabel(answer) {
   return answer ? 'Yes' : 'No';
 }
 
+export function scoreQuestionSplit(question, remainingSuspects, remainingItems) {
+  if (!question) throw new Error('Question data is required.');
+  const candidates = question.target === 'suspect' ? remainingSuspects : remainingItems;
+  if (!Array.isArray(candidates)) throw new Error('Remaining candidate data is required.');
+
+  let yesCount = 0;
+  let noCount = 0;
+  for (const candidate of candidates) {
+    const yes = question.target === 'itemAny'
+      ? question.traits.some((trait) => hasTrait(candidate, trait))
+      : hasTrait(candidate, question.trait);
+    if (yes) yesCount += 1;
+    else noCount += 1;
+  }
+
+  const total = yesCount + noCount;
+  const expectedEliminations = total > 0 ? (2 * yesCount * noCount) / total : 0;
+  const balance = total > 0 ? Math.min(yesCount, noCount) / total : 0;
+
+  return {
+    question,
+    target: question.target === 'suspect' ? 'suspect' : 'item',
+    yesCount,
+    noCount,
+    total,
+    balance,
+    expectedEliminations
+  };
+}
+
+export function getBestLead(questions, remainingSuspects, remainingItems, usedQuestionIds = new Set()) {
+  if (!Array.isArray(questions)) throw new Error('Question list is required.');
+  const used = usedQuestionIds instanceof Set ? usedQuestionIds : new Set(usedQuestionIds || []);
+
+  const ranked = questions
+    .filter((question) => !used.has(question.id))
+    .map((question) => scoreQuestionSplit(question, remainingSuspects, remainingItems))
+    .filter((entry) => entry.total > 1 && entry.expectedEliminations > 0)
+    .sort((a, b) => (
+      b.expectedEliminations - a.expectedEliminations
+      || b.balance - a.balance
+      || a.question.id.localeCompare(b.question.id)
+    ));
+
+  return ranked[0] || null;
+}
+
 function hasTrait(entity, trait) {
   return entity?.traits?.[trait] === true;
 }

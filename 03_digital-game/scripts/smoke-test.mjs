@@ -3,8 +3,10 @@ import { readFileSync } from 'node:fs';
 import {
   answerQuestion,
   createMystery,
+  getBestLead,
   getRemainingSuspects,
   makeAccusation,
+  scoreQuestionSplit,
   toggleEliminated
 } from '../src/engine/gameEngine.js';
 import { clearSavedGame, loadSavedGame, saveGame } from '../src/engine/storage.js';
@@ -58,6 +60,30 @@ if (eliminated.includes('suspect_001')) failures.push('toggleEliminated failed t
 const remaining = getRemainingSuspects(suspects, ['suspect_001']);
 if (remaining.length !== 24) failures.push(`Expected 24 remaining suspects, found ${remaining.length}.`);
 
+for (const question of questions) {
+  const split = scoreQuestionSplit(question, suspects, items);
+  if (split.yesCount + split.noCount !== split.total) failures.push(`${question.id} split counts do not sum to total.`);
+  const expectedTotal = question.target === 'suspect' ? suspects.length : items.length;
+  if (split.total !== expectedTotal) failures.push(`${question.id} ranked the wrong candidate pool.`);
+  if (split.expectedEliminations < 0 || split.expectedEliminations > split.total / 2) {
+    failures.push(`${question.id} produced an impossible information-gain score.`);
+  }
+}
+
+const bestLead = getBestLead(questions, suspects, items, new Set());
+if (!bestLead?.question?.id) failures.push('getBestLead must return an unused informative question.');
+if (!(bestLead.expectedEliminations > 0)) failures.push('best lead must eliminate possibilities on average.');
+
+const allUsed = new Set(questions.map((question) => question.id));
+if (getBestLead(questions, suspects, items, allUsed) !== null) failures.push('best lead must be null when every question is used.');
+
+const usedBest = new Set(bestLead?.question?.id ? [bestLead.question.id] : []);
+const nextLead = getBestLead(questions, suspects, items, usedBest);
+if (nextLead?.question?.id === bestLead?.question?.id) failures.push('best lead must exclude already used questions.');
+
+const singleSuspectLead = getBestLead(questions, [suspects[0]], items, new Set());
+if (singleSuspectLead?.target === 'suspect') failures.push('best lead should not recommend a suspect split when only one suspect remains.');
+
 try {
   saveGame({ mode: 'solo', roundState: { mode: 'solo' } });
   clearSavedGame();
@@ -73,7 +99,7 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`Who Took It? smoke test passed: ${suspects.length} suspects x ${items.length} items x ${questions.length} questions.`);
+console.log(`Who Took It? smoke test passed: ${suspects.length} suspects x ${items.length} items x ${questions.length} questions + non-cheating best-lead ranking.`);
 
 function readJson(relativePath) {
   return JSON.parse(readFileSync(new URL(`../${relativePath}`, import.meta.url), 'utf8'));
