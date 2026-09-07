@@ -36,6 +36,9 @@ function ensurePanel() {
   panel = document.createElement('section');
   panel.className = 'best-lead-assist';
   panel.setAttribute('aria-label', 'Detective assist');
+  panel.setAttribute('role', 'status');
+  panel.setAttribute('aria-live', 'polite');
+  panel.setAttribute('aria-atomic', 'true');
   panel.innerHTML = `
     <div class="best-lead-copy">
       <span class="best-lead-kicker">DETECTIVE ASSIST · NO SPOILERS</span>
@@ -43,7 +46,7 @@ function ensurePanel() {
       <p data-best-lead-question>Cross off a few possibilities and the strongest split will appear here.</p>
       <small data-best-lead-math>Uses remaining-board information only.</small>
     </div>
-    <button type="button" class="best-lead-action" data-best-lead-ask disabled>Ask lead</button>`;
+    <button type="button" class="best-lead-action" data-best-lead-ask aria-keyshortcuts="L" disabled>Ask lead</button>`;
   tabs.before(panel);
 
   panel.querySelector('[data-best-lead-ask]').addEventListener('click', () => {
@@ -68,7 +71,8 @@ function askThroughExistingControls(question) {
       .find((button) => button.querySelector('strong')?.textContent === question.text);
     if (target && !target.disabled) {
       target.click();
-      target.focus({ preventScroll: true });
+      try { target.focus({ preventScroll: true }); }
+      catch { target.focus(); }
       return;
     }
     attempts += 1;
@@ -116,7 +120,7 @@ function syncBestLead() {
   panel.dataset.target = best.target;
   panel.querySelector('[data-best-lead-title]').textContent = best.target === 'suspect' ? 'Best suspect lead' : 'Best item lead';
   panel.querySelector('[data-best-lead-question]').textContent = best.question.text;
-  panel.querySelector('[data-best-lead-math]').textContent = `${best.yesCount} YES · ${best.noCount} NO · ~${best.expectedEliminations.toFixed(1)} expected eliminations`;
+  panel.querySelector('[data-best-lead-math]').textContent = `${best.yesCount} YES · ${best.noCount} NO · ~${best.expectedEliminations.toFixed(1)} expected eliminations · Press L to ask`;
   button.disabled = false;
 }
 
@@ -139,6 +143,17 @@ if (root) {
     attributeFilter: ['class', 'disabled', 'aria-selected', 'aria-pressed']
   });
 }
+
+document.addEventListener('keydown', (event) => {
+  if (event.altKey || event.ctrlKey || event.metaKey) return;
+  if (event.key.toLowerCase() !== 'l') return;
+  const target = event.target;
+  if (target instanceof Element && target.closest('input,textarea,select,[contenteditable="true"]')) return;
+  const button = document.querySelector('.best-lead-assist [data-best-lead-ask]');
+  if (!button || button.disabled || button.closest('[hidden]')) return;
+  event.preventDefault();
+  button.click();
+});
 
 window.addEventListener('pageshow', scheduleSync);
 scheduleSync();
