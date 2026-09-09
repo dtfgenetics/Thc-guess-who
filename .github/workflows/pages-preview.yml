@@ -1,0 +1,66 @@
+name: Pages Preview Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '03_digital-game/**'
+      - '.github/workflows/pages-preview.yml'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-preview
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 03_digital-game
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 03_digital-game/.nvmrc
+          cache: npm
+          cache-dependency-path: 03_digital-game/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Full quality check
+        run: npm run check
+
+      - name: Build for GitHub Pages preview
+        env:
+          VITE_BASE_PATH: /Thc-guess-who/
+        run: npm run build
+
+      - name: Verify preview privacy
+        run: node scripts/verify-production-build.mjs
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 03_digital-game/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
