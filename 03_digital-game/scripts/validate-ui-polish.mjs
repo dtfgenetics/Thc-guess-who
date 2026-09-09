@@ -9,11 +9,14 @@ const health = read('src/components/DataHealthPanel.jsx');
 const errorBoundary = read('src/components/ErrorBoundary.jsx');
 const styles = read('src/styles.css');
 const extraStyles = read('src/extra.css');
+const ageGate = read('src/age-gate.js');
+const ageGateStyles = read('src/age-gate.css');
 const storage = read('src/engine/storage.js');
 const engine = read('src/engine/gameEngine.js');
 const bestLeadUi = read('src/best-lead-ui.js');
 
 assert(main.includes('<ErrorBoundary>') && main.includes('</ErrorBoundary>'), 'app must be wrapped in ErrorBoundary');
+assert(main.includes("import './age-gate.css';") && main.includes("import './age-gate.js';"), 'age gate must load from the canonical entrypoint');
 assert(main.includes("import './best-lead-ui.js';"), 'best-lead progressive UI layer must load from the canonical entrypoint');
 assert(app.includes('const accusationItemRef = useRef(null);'), 'quick accusation focus ref missing');
 assert(app.includes("itemSelect.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth'"), 'quick accusation should scroll to the item selector');
@@ -31,7 +34,14 @@ assert(styles.includes(':focus-visible'), 'visible keyboard focus is required');
 assert(styles.includes('prefers-reduced-motion'), 'reduced motion support is required');
 assert(extraStyles.includes('.error-screen'), 'error boundary must have visible fallback styling');
 assert(storage.includes('SCHEMA_VERSION'), 'saved game schema version missing');
+assert(storage.includes('ACTIVE_PLAYER_BY_MODE'), 'saved game validation must enforce active player by mode');
 assert(storage.includes('window.localStorage'), 'storage helper must use browser localStorage only behind guards');
+
+assert(ageGate.includes('AGE_GATE_KEY'), 'age gate should persist 21+ acknowledgement');
+assert(ageGate.includes('aria-modal') && ageGate.includes('21+ only'), 'age gate must present an accessible 21+ dialog');
+assert(ageGate.includes('/games/'), 'age gate must include a safe leave link');
+assert(ageGateStyles.includes('.age-gate') && ageGateStyles.includes('.age-gate-actions'), 'age gate styles are required');
+assert(ageGateStyles.includes(':focus-visible'), 'age gate controls need keyboard focus states');
 
 assert(engine.includes('export function scoreQuestionSplit('), 'deduction engine must expose pure question split scoring');
 assert(engine.includes('export function getBestLead('), 'deduction engine must expose best-lead ranking');
