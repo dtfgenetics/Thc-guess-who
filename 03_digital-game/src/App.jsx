@@ -5,6 +5,7 @@ import items from './data/items.json';
 import questions from './data/questions.json';
 import suspectArt from './data/suspect-art.json';
 
+import BestLeadAssist from './components/BestLeadAssist.jsx';
 import DataHealthPanel from './components/DataHealthPanel.jsx';
 import DebugPanel from './components/DebugPanel.jsx';
 import PlaytestExport from './components/PlaytestExport.jsx';
@@ -31,12 +32,6 @@ const SUSPECT_PORTRAITS = new Map(
     .map((entry) => [entry.suspectId, entry.asset])
 );
 
-function suspectPortrait(suspect) {
-  const filename = SUSPECT_PORTRAITS.get(suspect.id);
-  const runtimeBase = suspectArt.runtimeBase.replace(/^\/+|\/+$/g, '');
-  return filename ? `${import.meta.env.BASE_URL}${runtimeBase}/${filename}` : null;
-}
-
 const LANE_META = {
   Bag: { short: 'BAG', icon: '▰' },
   Dabs: { short: 'DABS', icon: '◆' },
@@ -44,6 +39,12 @@ const LANE_META = {
   'Chocolate Bar': { short: 'CHOCO', icon: '▥' },
   Gummies: { short: 'GUM', icon: '●' }
 };
+
+function suspectPortrait(suspect) {
+  const filename = SUSPECT_PORTRAITS.get(suspect.id);
+  const runtimeBase = suspectArt.runtimeBase.replace(/^\/+|\/+$/g, '');
+  return filename ? `${import.meta.env.BASE_URL}${runtimeBase}/${filename}` : null;
+}
 
 function createRoundState(mode) {
   if (mode === 'duel') {
@@ -386,7 +387,12 @@ export default function App() {
                     </span>
                     {eliminated ? <span className="eliminated-mark" aria-hidden="true">×</span> : null}
                   </button>
-                  <button type="button" className="accuse-chip" onClick={() => handleQuickAccuse(suspect.id)}>
+                  <button
+                    type="button"
+                    className="accuse-chip"
+                    disabled={Boolean(result)}
+                    onClick={() => handleQuickAccuse(suspect.id)}
+                  >
                     Accuse
                   </button>
                 </article>
@@ -423,6 +429,15 @@ export default function App() {
               </div>
               <small>{questionHistory.length}/{questions.length} used</small>
             </div>
+
+            <BestLeadAssist
+              questions={questions}
+              remainingSuspects={remainingSuspects}
+              remainingItems={remainingItems}
+              usedQuestionIds={usedQuestionIds}
+              onAskQuestion={handleAskQuestion}
+              disabled={Boolean(result)}
+            />
 
             <div className="category-tabs" role="tablist" aria-label="Clue categories">
               {QUESTION_CATEGORIES.map((category) => (
@@ -498,8 +513,8 @@ export default function App() {
             </div>
             {questionHistory.length ? (
               <ol>
-                {[...questionHistory].reverse().slice(0, 8).map((entry) => (
-                  <li key={`${entry.question.id}-${entry.player}`}>
+                {[...questionHistory].reverse().slice(0, 8).map((entry, index) => (
+                  <li key={`${entry.question.id}-${entry.player}-${index}`}>
                     <span className={entry.answer ? 'yes' : 'no'}>{entry.answerLabel}</span>
                     <p>{entry.question.text}</p>
                   </li>
@@ -516,7 +531,7 @@ export default function App() {
           <h2>Think you know who took what?</h2>
           <p>Lock in one suspect and one missing item. A wrong accusation ends this case.</p>
         </div>
-        <button type="button" className="accusation-launch" onClick={() => setAccusationOpen(true)}>
+        <button type="button" className="accusation-launch" disabled={Boolean(result)} onClick={() => setAccusationOpen(true)}>
           Build accusation <span>→</span>
         </button>
       </section>
@@ -553,7 +568,9 @@ export default function App() {
               Suspect
               <select value={selectedSuspectId} onChange={(event) => setSelectedSuspectId(event.target.value)}>
                 <option value="">Select suspect…</option>
-                {remainingSuspects.map((suspect) => <option key={suspect.id} value={suspect.id}>{suspect.name}</option>)}
+                {suspects.map((suspect) => (
+                  <option key={suspect.id} value={suspect.id}>{suspect.name}</option>
+                ))}
               </select>
             </label>
 
@@ -561,7 +578,9 @@ export default function App() {
               Missing item
               <select ref={accusationItemRef} value={selectedItemId} onChange={(event) => setSelectedItemId(event.target.value)}>
                 <option value="">Select item…</option>
-                {remainingItems.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+                {items.map((item) => (
+                  <option key={item.id} value={item.id}>{item.name}</option>
+                ))}
               </select>
             </label>
 
