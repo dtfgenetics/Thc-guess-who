@@ -10,7 +10,8 @@
     "validate": "node scripts/validate-data.mjs",
     "source:audit": "node scripts/source-audit.mjs",
     "balance": "node scripts/balance-report.mjs",
-    "smoke": "node scripts/smoke-test.mjs && node scripts/validate-ui-polish.mjs && npm run source:audit"
+    "smoke": "node scripts/smoke-test.mjs && node scripts/validate-ui-polish.mjs && npm run source:audit",
+    "check": "npm run validate && npm run smoke && npm run balance && npm audit && npm run build && node scripts/verify-production-build.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",
