@@ -20,6 +20,7 @@ This version is a clean implementation built from our own data and rules. It use
 - single-player mode
 - shared mystery / host mode
 - local 2-player duel mode
+- 21+ acknowledgement gate
 - local save/resume through browser storage
 - strict saved-session shape validation
 - crash-safe error boundary with clear-save recovery
