@@ -97,6 +97,16 @@ const validSoloSession = {
   }
 };
 
+const validSharedSession = {
+  ...validSoloSession,
+  mode: 'shared',
+  roundState: {
+    ...validSoloSession.roundState,
+    mode: 'shared',
+    activePlayer: 'Group'
+  }
+};
+
 const validDuelSession = {
   schemaVersion: 1,
   mode: 'duel',
@@ -114,10 +124,17 @@ const validDuelSession = {
 };
 
 if (!isValidSavedSession(validSoloSession)) failures.push('Valid solo saved session was rejected.');
+if (!isValidSavedSession(validSharedSession)) failures.push('Valid shared saved session was rejected.');
 if (!isValidSavedSession(validDuelSession)) failures.push('Valid duel saved session was rejected.');
 if (isValidSavedSession({ ...validSoloSession, schemaVersion: 99 })) failures.push('Invalid schema version was accepted.');
 if (isValidSavedSession({ ...validSoloSession, roundState: { mode: 'solo' } })) failures.push('Malformed round state was accepted.');
 if (isValidSavedSession({ ...validSoloSession, mode: 'duel' })) failures.push('Mode mismatch was accepted.');
+if (isValidSavedSession({ ...validSoloSession, roundState: { ...validSoloSession.roundState, activePlayer: 'Group' } })) {
+  failures.push('Solo session accepted a shared/group active player.');
+}
+if (isValidSavedSession({ ...validSharedSession, roundState: { ...validSharedSession.roundState, activePlayer: 'Solo Player' } })) {
+  failures.push('Shared session accepted a solo active player.');
+}
 if (isValidSavedSession({ ...validDuelSession, roundState: { ...validDuelSession.roundState, activePlayer: 'Player 3' } })) {
   failures.push('Invalid duel active player was accepted.');
 }
