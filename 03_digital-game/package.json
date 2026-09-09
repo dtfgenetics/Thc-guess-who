@@ -14,12 +14,12 @@
     "check": "npm run validate && npm run smoke && npm run balance && npm audit && npm run build && node scripts/verify-production-build.mjs"
   },
   "dependencies": {
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^6.1.1",
-    "vite": "^8.2.2"
+    "@vitejs/plugin-react": "6.1.1",
+    "vite": "8.2.2"
   },
   "engines": {
     "node": ">=22"
