@@ -11,6 +11,8 @@ This version is a clean implementation built from our own data and rules. It use
 - 5 missing items
 - preset question bank
 - binary yes/no answer engine
+- public tag to binary trait validation
+- duplicate question and wrong-trait-pool validation
 - manual suspect elimination
 - manual item elimination
 - final accusation flow
@@ -19,12 +21,15 @@ This version is a clean implementation built from our own data and rules. It use
 - shared mystery / host mode
 - local 2-player duel mode
 - local save/resume through browser storage
+- strict saved-session shape validation
 - crash-safe error boundary with clear-save recovery
 - host/playtest reveal tools gated to development builds
+- spoiler-free best-lead assistant
 - data validation panel
 - playtest summary copy tool with manual fallback
 - source/IP audit script
 - production mystery privacy verification
+- question balance report
 - CI build artifact upload
 
 ## Run Locally
@@ -37,11 +42,29 @@ npm run dev
 
 Then open the local Vite URL shown in the terminal.
 
-## Validate and Build
+## Full Handoff Check
+
+Run the full check before handing the project to another model, deploying, or adding new features:
+
+```bash
+npm run check
+```
+
+That command runs:
+
+1. data validation
+2. engine/storage/UI/source smoke checks
+3. question balance report
+4. dependency audit
+5. production build
+6. production mystery privacy verification
+
+## Individual Checks
 
 ```bash
 npm run validate
 npm run smoke
+npm run balance
 npm audit
 npm run build
 node scripts/verify-production-build.mjs
@@ -73,6 +96,7 @@ Do not add free-form typed questions until the rules engine is fully tested.
 src/data/suspects.json
 src/data/items.json
 src/data/questions.json
+src/data/tagTraitMap.js
 ```
 
 ## Main Engine Files
@@ -90,6 +114,7 @@ scripts/validate-data.mjs
 scripts/smoke-test.mjs
 scripts/validate-ui-polish.mjs
 scripts/source-audit.mjs
+scripts/balance-report.mjs
 scripts/verify-production-build.mjs
 ```
 
