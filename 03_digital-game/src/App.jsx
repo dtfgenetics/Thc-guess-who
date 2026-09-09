@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import suspects from './data/suspects.json';
 import items from './data/items.json';
 import questions from './data/questions.json';
+import suspectArt from './data/suspect-art.json';
 
 import DataHealthPanel from './components/DataHealthPanel.jsx';
 import DebugPanel from './components/DebugPanel.jsx';
@@ -24,6 +25,17 @@ const QUESTION_CATEGORIES = [...new Set(questions.map((question) => question.cat
 const validation = validateGameData({ suspects, items, questions });
 const SHOW_PLAYTEST_TOOLS = import.meta.env.DEV;
 const ALLOWED_MODES = new Set(['solo', 'shared', 'duel']);
+const SUSPECT_PORTRAITS = new Map(
+  suspectArt.entries
+    .filter((entry) => entry.status === 'approved')
+    .map((entry) => [entry.suspectId, entry.asset])
+);
+
+function suspectPortrait(suspect) {
+  const filename = SUSPECT_PORTRAITS.get(suspect.id);
+  const runtimeBase = suspectArt.runtimeBase.replace(/^\/+|\/+$/g, '');
+  return filename ? `${import.meta.env.BASE_URL}${runtimeBase}/${filename}` : null;
+}
 
 const LANE_META = {
   Bag: { short: 'BAG', icon: '▰' },
@@ -342,6 +354,7 @@ export default function App() {
             {suspects.map((suspect) => {
               const eliminated = eliminatedIds.includes(suspect.id);
               const lane = LANE_META[suspect.primaryLane] || { short: suspect.primaryLane, icon: '◇' };
+              const portrait = suspectPortrait(suspect);
               return (
                 <article
                   key={suspect.id}
@@ -359,9 +372,11 @@ export default function App() {
                       <span className="lane-badge"><b>{lane.icon}</b>{lane.short}</span>
                     </span>
                     <span className="suspect-avatar" aria-hidden="true">
-                      <span className="avatar-orbit" />
-                      <span className="avatar-head" />
-                      <span className="avatar-body" />
+                      {portrait ? <img src={portrait} alt="" loading="lazy" decoding="async" /> : <>
+                        <span className="avatar-orbit" />
+                        <span className="avatar-head" />
+                        <span className="avatar-body" />
+                      </>}
                       <b>{initials(suspect.name)}</b>
                     </span>
                     <span className="suspect-name">{suspect.name}</span>

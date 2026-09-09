@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "gameId": "who-took-it",
+  "updated": "2026-09-07",
+  "visualDirection": "original humorous cannabis mystery board with distinct silhouettes, inclusive suspects, and evidence-first readability",
+  "assets": [
+    {"id":"who-took-it-key-art-v1","kind":"background","status":"review","quantity":1,"priority":"P0","source":"concepts/who-took-it-key-art-v1.png","webPreview":"concepts/who-took-it-key-art-v1.webp","approvalNote":"Strong ensemble direction; not a substitute for the locked individual suspect portrait set."},
+    {"id":"suspect-portraits","kind":"card","status":"complete","quantity":25,"completed":25,"priority":"P0","sourcePattern":"characters/suspects/source/suspect-{001..025}-*-v1.png","webPattern":"characters/suspects/web/suspect-{001..025}-*-v1.webp"},
+    {"id":"item-evidence-cards","kind":"card","status":"missing","quantity":18,"priority":"P0"},
+    {"id":"suspect-board-frames","kind":"ui","status":"missing","quantity":3,"priority":"P1"},
+    {"id":"eliminated-selected-hidden-states","kind":"fx","status":"missing","quantity":4,"priority":"P1"}
+  ]
+}

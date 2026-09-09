@@ -21,7 +21,7 @@ This repository is the project home for the physical printable prototype, game m
 **Printable Prototype:** v0.8  
 **Digital Prototype:** v0.1 React/Vite app hardened
 
-Final character art should wait until playtesting confirms the rules, clue balance, and mode structure.
+The complete 25-character portrait set is integrated as a review candidate. Final art approval remains gated on playtesting, clue balance, and accessibility review.
 
 ## Supported Modes
 

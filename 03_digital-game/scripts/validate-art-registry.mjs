@@ -13,8 +13,8 @@ const expectedIds = suspects.map((suspect) => suspect.id);
 const entries = Array.isArray(registry.entries) ? registry.entries : [];
 
 if (registry.schemaVersion !== 1) errors.push('suspect-art schemaVersion must be 1');
-if (registry.runtimeBase !== '/who-took-it/suspects/') errors.push('runtimeBase must be /who-took-it/suspects/');
-if (registry.masterFormat !== '1024x1024 PNG/WebP') errors.push('masterFormat must preserve the locked 1024x1024 PNG/WebP contract');
+if (registry.runtimeBase !== 'assets/suspects/') errors.push('runtimeBase must be assets/suspects/');
+if (registry.masterFormat !== '1024x1536 PNG / 640x960 WebP') errors.push('masterFormat must preserve the approved portrait source/runtime contract');
 if (entries.length !== suspects.length) errors.push(`portrait registry must contain ${suspects.length} entries; found ${entries.length}`);
 
 const seenIds = new Set();
@@ -43,7 +43,7 @@ for (const entry of entries) {
   }
 
   if (entry.status === 'approved') {
-    const approvedPath = path.join(root, 'public/who-took-it/suspects', entry.asset);
+    const approvedPath = path.join(root, 'public', registry.runtimeBase, entry.asset);
     if (!fs.existsSync(approvedPath)) errors.push(`${entry.suspectId}: approved portrait is missing at ${approvedPath}`);
   }
 }

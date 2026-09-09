@@ -532,6 +532,21 @@ button:disabled {
   transform-origin: center bottom;
 }
 
+.suspect-avatar > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 25%;
+  transform: scale(1.08);
+}
+
+.suspect-avatar:has(> img) > b {
+  padding: 3px 5px;
+  border-radius: 5px;
+  background: rgba(7, 16, 11, 0.72);
+  text-shadow: 0 1px 2px #000;
+}
+
 .avatar-orbit {
   position: absolute;
   width: 112px;
