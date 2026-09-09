@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { traitForTag } from '../src/data/tagTraitMap.js';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
+const allowedQuestionTargets = new Set(['suspect', 'item', 'itemAny']);
 
 const suspects = readJson('src/data/suspects.json');
 const items = readJson('src/data/items.json');
@@ -17,7 +18,8 @@ if (questions.length < 20) errors.push(`Expected at least 20 questions, found ${
 
 const suspectIds = new Set();
 const itemIds = new Set();
-const traitIds = new Set();
+const suspectTraitIds = new Set();
+const itemTraitIds = new Set();
 
 for (const suspect of suspects) {
   if (!suspect.id) errors.push(`Suspect missing id: ${suspect.name || 'unknown'}.`);
@@ -34,7 +36,7 @@ for (const suspect of suspects) {
 
   const trueTraits = Object.entries(suspect.traits || {}).filter(([, value]) => value === true);
   if (trueTraits.length < 3) errors.push(`${suspect.name} should have at least 3 true traits.`);
-  trueTraits.forEach(([trait]) => traitIds.add(trait));
+  trueTraits.forEach(([trait]) => suspectTraitIds.add(trait));
 }
 
 for (const item of items) {
@@ -51,21 +53,31 @@ for (const item of items) {
 
   const trueTraits = Object.entries(item.traits || {}).filter(([, value]) => value === true);
   if (trueTraits.length < 4) errors.push(`${item.name} should have at least 4 true traits.`);
-  trueTraits.forEach(([trait]) => traitIds.add(trait));
+  trueTraits.forEach(([trait]) => itemTraitIds.add(trait));
 }
 
+const questionIds = new Set();
 for (const question of questions) {
   if (!question.id || !question.text || !question.target) {
     errors.push(`Question missing required fields: ${JSON.stringify(question)}.`);
     continue;
   }
 
-  if ((question.target === 'suspect' || question.target === 'item') && !question.trait) {
-    errors.push(`${question.id} missing trait.`);
+  if (questionIds.has(question.id)) errors.push(`Duplicate question id: ${question.id}.`);
+  questionIds.add(question.id);
+
+  if (!allowedQuestionTargets.has(question.target)) {
+    errors.push(`${question.id} has unsupported target: ${question.target}.`);
   }
 
-  if ((question.target === 'suspect' || question.target === 'item') && question.trait && !traitIds.has(question.trait)) {
-    errors.push(`${question.id} uses unused trait: ${question.trait}.`);
+  if (question.target === 'suspect') {
+    if (!question.trait) errors.push(`${question.id} missing trait.`);
+    else if (!suspectTraitIds.has(question.trait)) errors.push(`${question.id} uses suspect trait with no matching suspect: ${question.trait}.`);
+  }
+
+  if (question.target === 'item') {
+    if (!question.trait) errors.push(`${question.id} missing trait.`);
+    else if (!itemTraitIds.has(question.trait)) errors.push(`${question.id} uses item trait with no matching item: ${question.trait}.`);
   }
 
   if (question.target === 'itemAny') {
@@ -73,7 +85,7 @@ for (const question of questions) {
       errors.push(`${question.id} missing traits array.`);
     } else {
       for (const trait of question.traits) {
-        if (!traitIds.has(trait)) errors.push(`${question.id} uses unused trait: ${trait}.`);
+        if (!itemTraitIds.has(trait)) errors.push(`${question.id} uses itemAny trait with no matching item: ${trait}.`);
       }
     }
   }
