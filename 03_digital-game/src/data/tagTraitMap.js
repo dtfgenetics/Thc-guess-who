@@ -38,6 +38,7 @@ export const TAG_TO_TRAIT = {
   Pouch: 'pouch',
   Relaxed: 'relaxed',
   Secretive: 'secretive',
+  Sleepy: 'sleepy',
   Smoke: 'smoke',
   'Smoke Tool': 'smoke',
   Snack: 'snack',
