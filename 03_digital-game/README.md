@@ -19,7 +19,7 @@ This version is a clean implementation built from our own data and rules. It use
 - result screen
 - single-player mode
 - shared mystery / host mode
-- local 2-player duel mode
+- local 2-player duel mode with one hidden suspect+item mystery per player
 - 21+ acknowledgement gate
 - local save/resume through browser storage
 - strict saved-session shape validation
@@ -32,6 +32,23 @@ This version is a clean implementation built from our own data and rules. It use
 - production mystery privacy verification, including sourcemap scan when sourcemaps are enabled
 - question balance report
 - CI build artifact upload
+- canonical 25-character portrait registry keyed to `suspect_001` through `suspect_025`
+- deterministic portrait-registry validation so art cannot silently drift from suspect names/public tags
+- approval-aware portrait runtime contract: only assets marked `approved` may ship as character portraits
+
+## Character Art Contract
+
+The visual production specification is `docs/WHO_TOOK_IT_VISUAL_PRODUCTION_SPEC.md`. Runtime art mapping is owned by `src/data/suspect-art.json`.
+
+Every suspect has exactly one reserved production path:
+
+```text
+/who-took-it/suspects/suspect_001.webp
+...
+/who-took-it/suspects/suspect_025.webp
+```
+
+Entries remain `pending` until the concept-sheet and portrait review gates are passed. Changing an entry to `approved` requires the matching file to exist in `public/who-took-it/suspects/`; `scripts/validate-art-registry.mjs` fails otherwise. This prevents placeholder/procedural avatars from being mistaken for approved final art.
 
 ## Run Locally
 
@@ -54,17 +71,19 @@ npm run check
 
 That command runs:
 
-1. data validation
-2. engine/storage/UI/source smoke checks
-3. question balance report
-4. dependency audit
-5. production build
-6. production mystery privacy verification
+1. canonical game-data validation
+2. 25-character art-registry coverage/approval validation
+3. engine/storage/UI/source smoke checks
+4. question balance report
+5. dependency audit
+6. production build
+7. production mystery privacy verification
 
 ## Individual Checks
 
 ```bash
 npm run validate
+node scripts/validate-art-registry.mjs
 npm run smoke
 npm run balance
 npm audit
@@ -112,7 +131,7 @@ If sourcemaps are enabled, `node scripts/verify-production-build.mjs` scans `.ma
 
 ## Core Rule
 
-The first playable version must use preset questions only. Every question maps to binary trait data and answers **yes** or **no**.
+The first playable version uses preset questions only. Every question maps to binary trait data and answers **yes** or **no**.
 
 Do not add free-form typed questions until the rules engine is fully tested.
 
@@ -122,6 +141,7 @@ Do not add free-form typed questions until the rules engine is fully tested.
 src/data/suspects.json
 src/data/items.json
 src/data/questions.json
+src/data/suspect-art.json
 src/data/tagTraitMap.js
 ```
 
@@ -137,6 +157,7 @@ src/engine/validateData.js
 
 ```text
 scripts/validate-data.mjs
+scripts/validate-art-registry.mjs
 scripts/smoke-test.mjs
 scripts/validate-ui-polish.mjs
 scripts/source-audit.mjs
@@ -144,11 +165,11 @@ scripts/balance-report.mjs
 scripts/verify-production-build.mjs
 ```
 
-## Next Features
+## Next Production Work
 
-1. Add generated final suspect portraits.
-2. Add final item icons.
-3. Run browser click-through testing.
-4. Add hosted group mode with room codes.
-5. Add online multiplayer only after local modes are stable.
-6. Wire deployment into the main DTF Seeds games hub.
+1. Produce and approve the six-suspect benchmark concept sheet.
+2. Produce the 25 final suspect portraits against the locked registry.
+3. Produce the five final item icons.
+4. Replace the current procedural avatar treatment with approved portrait assets through the registry.
+5. Verify desktop/mobile board presentation and reduced-motion/focus behavior.
+6. Publish the built artifact through the canonical DTF Seeds game route.
