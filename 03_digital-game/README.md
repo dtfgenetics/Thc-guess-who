@@ -25,13 +25,14 @@ This version is a clean implementation built from our own data and rules. It use
 - strict saved-session shape validation
 - crash-safe error boundary with clear-save recovery
 - host/playtest reveal tools gated to development builds
-- spoiler-free best-lead assistant
+- spoiler-free best-lead assistant rendered inside React
 - data validation panel
 - playtest summary copy tool with manual fallback
 - source/IP audit script
 - production mystery privacy verification, including sourcemap scan when sourcemaps are enabled
 - question balance report
 - CI build artifact upload
+- optional GitHub Pages preview workflow
 - canonical 25-character portrait registry keyed to `suspect_001` through `suspect_025`
 - deterministic portrait-registry validation so art cannot silently drift from suspect names/public tags
 - approval-aware portrait runtime contract: only assets marked `approved` may ship as character portraits
@@ -40,22 +41,28 @@ This version is a clean implementation built from our own data and rules. It use
 
 The visual production specification is `docs/WHO_TOOK_IT_VISUAL_PRODUCTION_SPEC.md`. Runtime art mapping is owned by `src/data/suspect-art.json`.
 
-Every suspect has exactly one reserved production path:
+Every approved suspect portrait has one reserved runtime asset path:
 
 ```text
-/who-took-it/suspects/suspect_001.webp
+public/assets/suspects/suspect_001.webp
 ...
-/who-took-it/suspects/suspect_025.webp
+public/assets/suspects/suspect_025.webp
 ```
 
-Entries remain `pending` until the concept-sheet and portrait review gates are passed. Changing an entry to `approved` requires the matching file to exist in `public/who-took-it/suspects/`; `scripts/validate-art-registry.mjs` fails otherwise. This prevents placeholder/procedural avatars from being mistaken for approved final art.
+The browser resolves those under the active Vite base path, for example:
+
+```text
+/games/who-took-it/assets/suspects/suspect_001.webp
+```
+
+Changing a registry entry to `approved` requires the matching file to exist in `public/assets/suspects/`; `scripts/validate-art-registry.mjs` fails otherwise. This prevents placeholder/procedural avatars from being mistaken for approved final art.
 
 ## Run Locally
 
 ```bash
 cd 03_digital-game
 nvm use
-npm install
+npm ci
 npm run dev
 ```
 
@@ -93,19 +100,11 @@ node scripts/verify-production-build.mjs
 
 ## Dependency Reproducibility
 
-Package versions are pinned exactly in `package.json` because a `package-lock.json` has not been committed yet.
-
-When a developer can run npm locally, generate and commit the lockfile:
-
-```bash
-npm install
-```
-
-After `package-lock.json` exists, CI can switch from `npm install` to `npm ci`.
+`package-lock.json` is committed, so use `npm ci` for clean installs and CI. Package versions are pinned exactly in `package.json` to reduce drift between local work, GitHub Actions, and deployment.
 
 ## Deployment Base Path
 
-The Vite config defaults production builds to:
+The Vite config defaults production builds to the intended DTF Seeds route:
 
 ```text
 /games/who-took-it/
@@ -116,6 +115,14 @@ Override it when needed:
 ```bash
 VITE_BASE_PATH=/custom/path/ npm run build
 ```
+
+The GitHub Pages preview workflow builds with:
+
+```text
+/Thc-guess-who/
+```
+
+Do not deploy a build to the wrong path; the asset URLs will break.
 
 ## Production Sourcemaps
 
@@ -167,9 +174,9 @@ scripts/verify-production-build.mjs
 
 ## Next Production Work
 
-1. Produce and approve the six-suspect benchmark concept sheet.
-2. Produce the 25 final suspect portraits against the locked registry.
-3. Produce the five final item icons.
-4. Replace the current procedural avatar treatment with approved portrait assets through the registry.
+1. Verify GitHub Actions runs after the current code pass.
+2. Run manual browser QA from `../04_playtest/manual-browser-qa-v0.1.md`.
+3. Produce and approve the final five item icons.
+4. Verify all 25 approved suspect portraits visually match the locked roster.
 5. Verify desktop/mobile board presentation and reduced-motion/focus behavior.
 6. Publish the built artifact through the canonical DTF Seeds game route.
