@@ -1,7 +1,11 @@
 import { traitForTag } from '../data/tagTraitMap.js';
 
+const ALLOWED_QUESTION_TARGETS = new Set(['suspect', 'item', 'itemAny']);
+
 export function validateGameData({ suspects, items, questions }) {
   const errors = [];
+  const suspectTraitIds = new Set();
+  const itemTraitIds = new Set();
 
   if (!Array.isArray(suspects) || suspects.length !== 25) {
     errors.push(`Expected 25 suspects, found ${Array.isArray(suspects) ? suspects.length : 'invalid data'}.`);
@@ -24,9 +28,9 @@ export function validateGameData({ suspects, items, questions }) {
       validateTags(`${suspect.name || suspect.id} publicTags`, suspect.publicTags, suspect.traits, errors);
     }
 
-    if (!suspect.traits || Object.values(suspect.traits).filter(Boolean).length < 3) {
-      errors.push(`${suspect.name || suspect.id} should have at least 3 true traits.`);
-    }
+    const trueTraits = Object.entries(suspect.traits || {}).filter(([, value]) => value === true);
+    if (trueTraits.length < 3) errors.push(`${suspect.name || suspect.id} should have at least 3 true traits.`);
+    trueTraits.forEach(([trait]) => suspectTraitIds.add(trait));
   });
 
   const itemIds = new Set();
@@ -42,20 +46,43 @@ export function validateGameData({ suspects, items, questions }) {
       validateTags(`${item.name || item.id} tags`, item.tags, item.traits, errors);
     }
 
-    if (!item.traits || Object.values(item.traits).filter(Boolean).length < 4) {
-      errors.push(`${item.name || item.id} should have at least 4 true traits.`);
-    }
+    const trueTraits = Object.entries(item.traits || {}).filter(([, value]) => value === true);
+    if (trueTraits.length < 4) errors.push(`${item.name || item.id} should have at least 4 true traits.`);
+    trueTraits.forEach(([trait]) => itemTraitIds.add(trait));
   });
 
+  const questionIds = new Set();
   questions.forEach((question) => {
     if (!question.id || !question.text || !question.target) {
       errors.push(`Question missing required fields: ${JSON.stringify(question)}.`);
+      return;
     }
-    if ((question.target === 'suspect' || question.target === 'item') && !question.trait) {
-      errors.push(`${question.id} missing trait.`);
+
+    if (questionIds.has(question.id)) errors.push(`Duplicate question id: ${question.id}.`);
+    questionIds.add(question.id);
+
+    if (!ALLOWED_QUESTION_TARGETS.has(question.target)) {
+      errors.push(`${question.id} has unsupported target: ${question.target}.`);
     }
-    if (question.target === 'itemAny' && (!Array.isArray(question.traits) || question.traits.length === 0)) {
-      errors.push(`${question.id} missing traits array.`);
+
+    if (question.target === 'suspect') {
+      if (!question.trait) errors.push(`${question.id} missing trait.`);
+      else if (!suspectTraitIds.has(question.trait)) errors.push(`${question.id} uses suspect trait with no matching suspect: ${question.trait}.`);
+    }
+
+    if (question.target === 'item') {
+      if (!question.trait) errors.push(`${question.id} missing trait.`);
+      else if (!itemTraitIds.has(question.trait)) errors.push(`${question.id} uses item trait with no matching item: ${question.trait}.`);
+    }
+
+    if (question.target === 'itemAny') {
+      if (!Array.isArray(question.traits) || question.traits.length === 0) {
+        errors.push(`${question.id} missing traits array.`);
+      } else {
+        for (const trait of question.traits) {
+          if (!itemTraitIds.has(trait)) errors.push(`${question.id} uses itemAny trait with no matching item: ${trait}.`);
+        }
+      }
     }
   });
 
