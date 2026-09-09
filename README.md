@@ -40,14 +40,10 @@ npm install
 npm run dev
 ```
 
-Validation and build:
+Full handoff check:
 
 ```bash
-npm run validate
-npm run smoke
-npm audit
-npm run build
-node scripts/verify-production-build.mjs
+npm run check
 ```
 
 Current digital features:
@@ -56,6 +52,8 @@ Current digital features:
 - 5 missing items
 - preset yes/no question bank
 - binary trait answer engine
+- public tag to binary trait validation
+- duplicate question and wrong-trait-pool validation
 - suspect elimination
 - item tracking
 - accusation flow
@@ -63,9 +61,12 @@ Current digital features:
 - shared mystery / host mode
 - local 2-player duel mode
 - local browser save/resume
+- strict saved-session shape validation
 - crash-safe error boundary
+- spoiler-free best-lead assistant
 - data validation
 - source/IP audit
+- question balance report
 - production mystery privacy check
 - playtest export tool
 - GitHub Actions build artifact upload
@@ -84,7 +85,7 @@ Every clue and question must resolve to a clear **yes** or **no**. No maybe answ
   Printable PDF files and ZIP kit
 
 02_data/
-  Structured JSON data for suspects, items, and question bank
+  Shared data exports and source-of-truth notes
 
 03_digital-game/
   Browser game implementation
