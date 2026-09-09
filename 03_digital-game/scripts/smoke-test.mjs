@@ -9,7 +9,7 @@ import {
   scoreQuestionSplit,
   toggleEliminated
 } from '../src/engine/gameEngine.js';
-import { clearSavedGame, loadSavedGame, saveGame } from '../src/engine/storage.js';
+import { clearSavedGame, isValidSavedSession, loadSavedGame, saveGame } from '../src/engine/storage.js';
 
 const suspects = readJson('src/data/suspects.json');
 const items = readJson('src/data/items.json');
@@ -84,6 +84,44 @@ if (nextLead?.question?.id === bestLead?.question?.id) failures.push('best lead 
 const singleSuspectLead = getBestLead(questions, [suspects[0]], items, new Set());
 if (singleSuspectLead?.target === 'suspect') failures.push('best lead should not recommend a suspect split when only one suspect remains.');
 
+const validSoloSession = {
+  schemaVersion: 1,
+  mode: 'solo',
+  roundState: {
+    mode: 'solo',
+    activePlayer: 'Solo Player',
+    mysteries: { shared: { suspect: suspects[0], item: items[0] } },
+    eliminatedByPlayer: { shared: [] },
+    eliminatedItemsByPlayer: { shared: [] },
+    historyByPlayer: { shared: [] }
+  }
+};
+
+const validDuelSession = {
+  schemaVersion: 1,
+  mode: 'duel',
+  roundState: {
+    mode: 'duel',
+    activePlayer: 'Player 1',
+    mysteries: {
+      'Player 1': { suspect: suspects[0], item: items[0] },
+      'Player 2': { suspect: suspects[1], item: items[1] }
+    },
+    eliminatedByPlayer: { 'Player 1': [], 'Player 2': [] },
+    eliminatedItemsByPlayer: { 'Player 1': [], 'Player 2': [] },
+    historyByPlayer: { 'Player 1': [], 'Player 2': [] }
+  }
+};
+
+if (!isValidSavedSession(validSoloSession)) failures.push('Valid solo saved session was rejected.');
+if (!isValidSavedSession(validDuelSession)) failures.push('Valid duel saved session was rejected.');
+if (isValidSavedSession({ ...validSoloSession, schemaVersion: 99 })) failures.push('Invalid schema version was accepted.');
+if (isValidSavedSession({ ...validSoloSession, roundState: { mode: 'solo' } })) failures.push('Malformed round state was accepted.');
+if (isValidSavedSession({ ...validSoloSession, mode: 'duel' })) failures.push('Mode mismatch was accepted.');
+if (isValidSavedSession({ ...validDuelSession, roundState: { ...validDuelSession.roundState, activePlayer: 'Player 3' } })) {
+  failures.push('Invalid duel active player was accepted.');
+}
+
 try {
   saveGame({ mode: 'solo', roundState: { mode: 'solo' } });
   clearSavedGame();
@@ -99,7 +137,7 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`Who Took It? smoke test passed: ${suspects.length} suspects x ${items.length} items x ${questions.length} questions + non-cheating best-lead ranking.`);
+console.log(`Who Took It? smoke test passed: ${suspects.length} suspects x ${items.length} items x ${questions.length} questions + best-lead and storage validation.`);
 
 function readJson(relativePath) {
   return JSON.parse(readFileSync(new URL(`../${relativePath}`, import.meta.url), 'utf8'));
