@@ -28,7 +28,7 @@ This version is a clean implementation built from our own data and rules. It use
 - data validation panel
 - playtest summary copy tool with manual fallback
 - source/IP audit script
-- production mystery privacy verification
+- production mystery privacy verification, including sourcemap scan when sourcemaps are enabled
 - question balance report
 - CI build artifact upload
 
@@ -83,6 +83,18 @@ Override it when needed:
 ```bash
 VITE_BASE_PATH=/custom/path/ npm run build
 ```
+
+## Production Sourcemaps
+
+Sourcemaps are disabled by default so debug-only source strings are not shipped accidentally.
+
+Enable only for a private staging/debug build:
+
+```bash
+VITE_ENABLE_SOURCEMAPS=true npm run build
+```
+
+If sourcemaps are enabled, `node scripts/verify-production-build.mjs` scans `.map` files as well.
 
 ## Core Rule
 
