@@ -36,7 +36,8 @@ The digital game lives in `03_digital-game/`.
 
 ```bash
 cd 03_digital-game
-npm install
+nvm use
+npm ci
 npm run dev
 ```
 
@@ -45,6 +46,14 @@ Full handoff check:
 ```bash
 npm run check
 ```
+
+The default production build target is the DTF Seeds games route:
+
+```text
+/games/who-took-it/
+```
+
+A separate GitHub Pages preview workflow builds with `/Thc-guess-who/` so preview assets resolve correctly.
 
 Current digital features:
 
@@ -60,10 +69,11 @@ Current digital features:
 - single-player mode
 - shared mystery / host mode
 - local 2-player duel mode
+- 21+ acknowledgement gate
 - local browser save/resume
 - strict saved-session shape validation
 - crash-safe error boundary
-- spoiler-free best-lead assistant
+- spoiler-free best-lead assistant rendered inside React
 - data validation
 - source/IP audit
 - question balance report
