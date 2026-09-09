@@ -6,11 +6,9 @@ Use this checklist before deploying **Who Took It?** to dtfseeds.com.
 
 ```bash
 cd 03_digital-game
+nvm use
 npm install
-npm run validate
-npm run smoke
-npm audit
-npm run build
+npm run check
 npm run dev
 ```
 
@@ -23,6 +21,15 @@ Test at minimum:
 - Safari iOS, if available
 - Firefox desktop, if available
 
+## 21+ Gate Test
+
+- [ ] First visit shows the 21+ acknowledgement gate.
+- [ ] Gate text says adult party game and 21+ only.
+- [ ] Confirm button closes the gate.
+- [ ] Refresh keeps the gate dismissed after confirmation.
+- [ ] Leave link returns to `/games/`.
+- [ ] Gate controls have visible keyboard focus.
+
 ## Single Player Test
 
 - [ ] Page loads without console errors.
@@ -33,6 +40,8 @@ Test at minimum:
 - [ ] Asked questions become disabled.
 - [ ] Suspect cards can be eliminated and restored.
 - [ ] Missing items can be eliminated and restored.
+- [ ] Best-lead assistant appears without revealing the answer.
+- [ ] Best-lead assistant can ask a useful remaining question.
 - [ ] Quick Accuse opens the accusation drawer.
 - [ ] Quick Accuse focuses the item selector.
 - [ ] Correct accusation shows win result.
@@ -47,6 +56,8 @@ Test at minimum:
 - [ ] Refresh the browser.
 - [ ] Round state is restored.
 - [ ] New case overwrites the saved case.
+- [ ] Manually corrupt the saved game in localStorage.
+- [ ] Refresh clears the bad save or shows the recovery screen instead of a blank page.
 
 ## Shared Mystery / Host Mode Test
 
@@ -74,13 +85,17 @@ Test at minimum:
 - [ ] Motion respects reduced-motion setting.
 - [ ] Result dialog is readable on mobile.
 - [ ] Accusation drawer is readable on mobile.
+- [ ] Age gate is readable on mobile.
 
 ## Fail Conditions
 
 Do not deploy if:
 
 - production build exposes mystery reveal tools
+- production sourcemaps leak debug/playtest strings
+- 21+ gate does not appear on first visit
 - any question returns maybe or unclear wording
+- printed tags do not match binary traits
 - the app crashes after refresh
 - the 5x5 board overflows mobile width badly
 - Vite build fails
