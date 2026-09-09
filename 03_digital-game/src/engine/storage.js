@@ -2,6 +2,10 @@ const STORAGE_KEY = 'who-took-it:digital-game:v1';
 const SCHEMA_VERSION = 1;
 const ALLOWED_MODES = new Set(['solo', 'shared', 'duel']);
 const DUEL_PLAYERS = ['Player 1', 'Player 2'];
+const ACTIVE_PLAYER_BY_MODE = {
+  solo: 'Solo Player',
+  shared: 'Group'
+};
 
 export function loadSavedGame() {
   if (!canUseStorage()) return null;
@@ -72,7 +76,7 @@ function isValidSessionPayload(session) {
     );
   }
 
-  if (!['Solo Player', 'Group'].includes(session.roundState.activePlayer)) return false;
+  if (session.roundState.activePlayer !== ACTIVE_PLAYER_BY_MODE[session.mode]) return false;
   return (
     isMystery(session.roundState.mysteries.shared) &&
     Array.isArray(session.roundState.eliminatedByPlayer.shared) &&
