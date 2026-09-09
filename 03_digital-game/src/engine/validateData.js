@@ -1,3 +1,5 @@
+import { traitForTag } from '../data/tagTraitMap.js';
+
 export function validateGameData({ suspects, items, questions }) {
   const errors = [];
 
@@ -18,7 +20,10 @@ export function validateGameData({ suspects, items, questions }) {
     if (!suspect.name) errors.push(`Suspect ${suspect.id} missing name.`);
     if (!Array.isArray(suspect.publicTags) || suspect.publicTags.length !== 3) {
       errors.push(`${suspect.name || suspect.id} must have exactly 3 public tags.`);
+    } else {
+      validateTags(`${suspect.name || suspect.id} publicTags`, suspect.publicTags, suspect.traits, errors);
     }
+
     if (!suspect.traits || Object.values(suspect.traits).filter(Boolean).length < 3) {
       errors.push(`${suspect.name || suspect.id} should have at least 3 true traits.`);
     }
@@ -33,7 +38,10 @@ export function validateGameData({ suspects, items, questions }) {
     if (!item.name) errors.push(`Item ${item.id} missing name.`);
     if (!Array.isArray(item.tags) || item.tags.length < 5) {
       errors.push(`${item.name || item.id} should have at least 5 item tags.`);
+    } else {
+      validateTags(`${item.name || item.id} tags`, item.tags, item.traits, errors);
     }
+
     if (!item.traits || Object.values(item.traits).filter(Boolean).length < 4) {
       errors.push(`${item.name || item.id} should have at least 4 true traits.`);
     }
@@ -55,4 +63,17 @@ export function validateGameData({ suspects, items, questions }) {
     valid: errors.length === 0,
     errors
   };
+}
+
+function validateTags(label, tags, traits, errors) {
+  for (const tag of tags) {
+    const trait = traitForTag(tag);
+    if (!trait) {
+      errors.push(`${label} contains unmapped tag: ${tag}.`);
+      continue;
+    }
+    if (traits?.[trait] !== true) {
+      errors.push(`${label} tag "${tag}" must map to true trait "${trait}".`);
+    }
+  }
 }
