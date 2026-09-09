@@ -5,6 +5,6 @@ export default defineConfig(({ command }) => ({
   base: process.env.VITE_BASE_PATH || (command === 'build' ? '/games/who-took-it/' : '/'),
   plugins: [react()],
   build: {
-    sourcemap: true
+    sourcemap: process.env.VITE_ENABLE_SOURCEMAPS === 'true'
   }
 }));
