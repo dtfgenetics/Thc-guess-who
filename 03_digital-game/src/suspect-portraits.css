@@ -1,0 +1,29 @@
+.suspect-avatar::before {
+  content: "ART PENDING";
+  position: absolute;
+  left: 7px;
+  top: 7px;
+  z-index: 5;
+  padding: 4px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(7, 16, 11, 0.72);
+  color: rgba(255, 255, 255, 0.9);
+  font: 900 0.52rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.08em;
+  transform: rotate(calc(var(--avatar-tilt) * -1));
+  pointer-events: none;
+}
+
+.suspect-card.is-eliminated .suspect-avatar::before {
+  opacity: 0.6;
+}
+
+@media (max-width: 600px) {
+  .suspect-avatar::before {
+    left: 5px;
+    top: 5px;
+    padding: 3px 5px;
+    font-size: 0.46rem;
+  }
+}
