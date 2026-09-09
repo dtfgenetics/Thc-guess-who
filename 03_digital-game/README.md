@@ -36,6 +36,7 @@ This version is a clean implementation built from our own data and rules. It use
 
 ```bash
 cd 03_digital-game
+nvm use
 npm install
 npm run dev
 ```
@@ -69,6 +70,18 @@ npm audit
 npm run build
 node scripts/verify-production-build.mjs
 ```
+
+## Dependency Reproducibility
+
+Package versions are pinned exactly in `package.json` because a `package-lock.json` has not been committed yet.
+
+When a developer can run npm locally, generate and commit the lockfile:
+
+```bash
+npm install
+```
+
+After `package-lock.json` exists, CI can switch from `npm install` to `npm ci`.
 
 ## Deployment Base Path
 
