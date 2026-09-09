@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { traitForTag } from '../src/data/tagTraitMap.js';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 
@@ -27,6 +28,8 @@ for (const suspect of suspects) {
   if (!suspect.name) errors.push(`${suspect.id} missing name.`);
   if (!Array.isArray(suspect.publicTags) || suspect.publicTags.length !== 3) {
     errors.push(`${suspect.name} must have exactly 3 public tags.`);
+  } else {
+    validateTags(`${suspect.name} publicTags`, suspect.publicTags, suspect.traits);
   }
 
   const trueTraits = Object.entries(suspect.traits || {}).filter(([, value]) => value === true);
@@ -40,7 +43,11 @@ for (const item of items) {
   itemIds.add(item.id);
 
   if (!item.name) errors.push(`${item.id} missing name.`);
-  if (!Array.isArray(item.tags) || item.tags.length < 5) errors.push(`${item.name} should have at least 5 tags.`);
+  if (!Array.isArray(item.tags) || item.tags.length < 5) {
+    errors.push(`${item.name} should have at least 5 tags.`);
+  } else {
+    validateTags(`${item.name} tags`, item.tags, item.traits);
+  }
 
   const trueTraits = Object.entries(item.traits || {}).filter(([, value]) => value === true);
   if (trueTraits.length < 4) errors.push(`${item.name} should have at least 4 true traits.`);
@@ -79,6 +86,19 @@ if (errors.length) {
 }
 
 console.log('Who Took It? data validation passed.');
+
+function validateTags(label, tags, traits) {
+  for (const tag of tags) {
+    const trait = traitForTag(tag);
+    if (!trait) {
+      errors.push(`${label} contains unmapped tag: ${tag}.`);
+      continue;
+    }
+    if (traits?.[trait] !== true) {
+      errors.push(`${label} tag "${tag}" must map to true trait "${trait}".`);
+    }
+  }
+}
 
 function readJson(relativePath) {
   return JSON.parse(readFileSync(join(root, relativePath), 'utf8'));
