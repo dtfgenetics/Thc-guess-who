@@ -100,7 +100,7 @@ node scripts/verify-production-build.mjs
 
 ## Dependency Reproducibility
 
-`package-lock.json` is committed, so use `npm ci` for clean installs and CI. Package versions are pinned exactly in `package.json` to reduce drift between local work, GitHub Actions, and deployment.
+`package-lock.json` is committed, so use `npm ci` for clean installs and CI. The package manifest uses semver ranges that match the lockfile root contract, while the lockfile pins the exact resolved package versions used by CI and deployment.
 
 ## Deployment Base Path
 
