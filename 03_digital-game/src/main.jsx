@@ -4,6 +4,7 @@ import App from './App.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 import './styles.css';
 import './extra.css';
+import './age-gate.css';
 import './age-gate.js';
 import './best-lead-ui.js';
 
