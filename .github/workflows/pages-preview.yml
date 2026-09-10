@@ -1,4 +1,4 @@
-name: Pages Preview Deploy
+name: Digital Game Preview Artifact
 
 on:
   workflow_dispatch:
@@ -11,11 +11,9 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages-preview
+  group: who-took-it-preview-artifact
   cancel-in-progress: true
 
 jobs:
@@ -38,29 +36,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Full quality check
+      - name: Full production quality check
         run: npm run check
 
-      - name: Build for GitHub Pages preview
-        env:
-          VITE_BASE_PATH: /Thc-guess-who/
-        run: npm run build
+      - name: Verify production route base
+        run: |
+          set -euo pipefail
+          grep -Rqs '/games/who-took-it/' dist
+          node scripts/verify-production-build.mjs
 
-      - name: Verify preview privacy
-        run: node scripts/verify-production-build.mjs
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Upload production-like preview artifact
+        uses: actions/upload-artifact@v4
         with:
+          name: who-took-it-preview-${{ github.sha }}
           path: 03_digital-game/dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          if-no-files-found: error
+          retention-days: 14
