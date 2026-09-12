@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "status": "production-art-pending",
+  "spec": "docs/WHO_TOOK_IT_VISUAL_PRODUCTION_SPEC.md",
+  "masterFormat": "1024x1024 PNG / WebP",
+  "runtimeBase": "assets/items/",
+  "entries": [
+    {"itemId":"item_bag","name":"Bag","asset":"item_bag.webp","status":"pending","cues":["Carrying","Hiding","Pocket","Stash","Container"]},
+    {"itemId":"item_dabs","name":"Dabs","asset":"item_dabs.webp","status":"pending","cues":["Sticky","Glass","Tool","Heat","Concentrate"]},
+    {"itemId":"item_lighter","name":"Lighter","asset":"item_lighter.webp","status":"pending","cues":["Flame","Borrowing","Pocket","Smoke Tool","Missing Again"]},
+    {"itemId":"item_chocolate_bar","name":"Chocolate Bar","asset":"item_chocolate_bar.webp","status":"pending","cues":["Snack","Wrapper","Crumbs","Sweet","Munchies"]},
+    {"itemId":"item_gummies","name":"Gummies","asset":"item_gummies.webp","status":"pending","cues":["Candy","Sticky","Colorful","Edible","Sugar"]}
+  ]
+}
