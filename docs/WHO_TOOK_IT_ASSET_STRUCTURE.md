@@ -1,6 +1,6 @@
 # Who Took It? Asset Storage Structure
 
-Updated: 2026-09-10
+Updated: 2026-09-12
 Status: LOCKED FOR PRODUCTION
 
 ## Source of truth
@@ -63,7 +63,7 @@ Already locked:
 `03_digital-game/public/assets/suspects/suspect_NNN.webp`
 
 ### Missing items
-Canonical item IDs come from `03_digital-game/src/data/items.json`.
+Canonical item IDs come from `03_digital-game/src/data/items.json`. There are exactly five gameplay items; do not create extra item cards unless the canonical rules/data expand first.
 
 - `item_bag.webp`
 - `item_dabs.webp`
@@ -79,6 +79,8 @@ Production masters:
 
 Review derivatives:
 `assets/items/web/<item-id>-v1.webp`
+
+The deterministic item-art mapping lives in `03_digital-game/src/data/item-art.json`. An item may be marked `approved` only after its runtime file exists at the mapped path. Item art cues must exactly match the canonical `tags` array for that item so visuals cannot contradict clue logic.
 
 ### Evidence
 Use stable semantic IDs rather than display labels:
@@ -154,4 +156,4 @@ Each runtime asset must have:
 4. a registry or deterministic code mapping;
 5. a visual QA pass at desktop and mobile sizes.
 
-The existing suspect system follows this model through `src/data/suspect-art.json`; new asset families should follow the same pattern.
+Suspects use `src/data/suspect-art.json`; missing items use `src/data/item-art.json`. Both registries are enforced by `scripts/validate-art-registry.mjs` so approved runtime art cannot silently drift away from canonical gameplay data.
