@@ -4,6 +4,7 @@ import App from './App.jsx';
 import AgeGate from './components/AgeGate.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 import EvidenceArtEnhancer from './components/EvidenceArtEnhancer.jsx';
+import UiArtEnhancer from './components/UiArtEnhancer.jsx';
 import './styles.css';
 import './extra.css';
 import './age-gate.css';
@@ -14,6 +15,7 @@ createRoot(document.getElementById('root')).render(
       <AgeGate>
         <App />
         <EvidenceArtEnhancer />
+        <UiArtEnhancer />
       </AgeGate>
     </ErrorBoundary>
   </React.StrictMode>
