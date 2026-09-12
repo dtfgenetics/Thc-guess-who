@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "runtimeBase": "assets/ui/",
+  "entries": [
+    {"id":"suspectCardNormal","asset":"suspect-card-frame-normal.webp","status":"approved"},
+    {"id":"suspectCardActive","asset":"suspect-card-frame-active.webp","status":"approved"},
+    {"id":"suspectCardEliminated","asset":"suspect-card-frame-eliminated.webp","status":"approved"},
+    {"id":"mysteryCardHidden","asset":"mystery-card-frame-hidden.webp","status":"approved"},
+    {"id":"evidenceFrameNormal","asset":"evidence-frame-normal.webp","status":"approved"},
+    {"id":"evidenceFrameActive","asset":"evidence-frame-active.webp","status":"approved"},
+    {"id":"modalFrame","asset":"modal-frame.webp","status":"approved"},
+    {"id":"questionChipDisabled","asset":"question-chip-disabled.webp","status":"approved"},
+    {"id":"questionChipActive","asset":"question-chip-active.webp","status":"approved"},
+    {"id":"bannerEmpty","asset":"banner-empty.webp","status":"approved"}
+  ]
+}
