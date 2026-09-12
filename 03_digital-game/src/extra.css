@@ -261,6 +261,35 @@ body {
   color: #8fd1f1;
 }
 
+/* Approved evidence art is layered over the compact fallback glyph only after
+   the runtime preloader confirms the asset loaded successfully. */
+.evidence-icon.has-evidence-art {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  color: transparent !important;
+  background: linear-gradient(145deg, rgba(32, 53, 35, 0.98), rgba(12, 25, 17, 0.98));
+  box-shadow: inset 0 0 0 1px rgba(201, 244, 109, 0.16), 0 6px 16px rgba(0, 0, 0, 0.24);
+}
+
+.evidence-icon.has-evidence-art::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  z-index: 1;
+  border-radius: 8px;
+  background-image: var(--evidence-art);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.42));
+}
+
+.evidence-card.is-eliminated .evidence-icon.has-evidence-art::before {
+  opacity: 0.58;
+  filter: grayscale(1) brightness(0.75);
+}
+
 @media (max-width: 620px) {
   .case-nav {
     gap: 10px;

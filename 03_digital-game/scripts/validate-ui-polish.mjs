@@ -7,6 +7,7 @@ const main = read('src/main.jsx');
 const app = read('src/App.jsx');
 const ageGate = read('src/components/AgeGate.jsx');
 const bestLead = read('src/components/BestLeadAssist.jsx');
+const evidenceArtEnhancer = read('src/components/EvidenceArtEnhancer.jsx');
 const health = read('src/components/DataHealthPanel.jsx');
 const errorBoundary = read('src/components/ErrorBoundary.jsx');
 const styles = read('src/styles.css');
@@ -14,6 +15,7 @@ const extraStyles = read('src/extra.css');
 const ageGateStyles = read('src/age-gate.css');
 const storage = read('src/engine/storage.js');
 const engine = read('src/engine/gameEngine.js');
+const itemArt = JSON.parse(read('src/data/item-art.json'));
 
 assert(!exists('src/age-gate.js'), 'DOM-mutating age-gate side-effect script should not exist');
 assert(!exists('src/best-lead-ui.js'), 'DOM-mutating best-lead side-effect script should not exist');
@@ -35,6 +37,21 @@ assert(app.includes('useEffect(() => {') && app.includes('selectedSuspectId') &&
 assert(app.includes('remainingSuspects={remainingSuspects}') && app.includes('remainingItems={remainingItems}'), 'best-lead assistant must receive visible remaining possibilities');
 assert(app.includes('usedQuestionIds={usedQuestionIds}'), 'best-lead assistant must receive already-used questions');
 assert(app.includes('onAskQuestion={handleAskQuestion}'), 'best-lead assistant must ask through the same React handler as manual questions');
+
+assert(main.includes("import EvidenceArtEnhancer from './components/EvidenceArtEnhancer.jsx';"), 'approved evidence art enhancer must be imported by the React entry point');
+assert(main.includes('<EvidenceArtEnhancer />'), 'approved evidence art enhancer must render inside the React tree');
+assert.equal(itemArt.entries.length, 5, 'evidence art runtime must remain aligned to the five canonical missing items');
+assert(evidenceArtEnhancer.includes("entry.status === 'approved'"), 'evidence runtime must ignore unapproved art');
+assert(evidenceArtEnhancer.includes('import.meta.env.BASE_URL'), 'evidence runtime must honor the deployment base path');
+assert(evidenceArtEnhancer.includes('const preload = new Image();'), 'evidence runtime must preload art before hiding the fallback glyph');
+assert(evidenceArtEnhancer.includes('preload.onload'), 'evidence runtime must apply art only after successful load');
+assert(evidenceArtEnhancer.includes('preload.onerror'), 'evidence runtime must preserve the glyph fallback after image failure');
+assert(evidenceArtEnhancer.includes('MutationObserver'), 'evidence runtime must recover after React evidence-lane rerenders');
+assert(evidenceArtEnhancer.includes('__WHO_TOOK_IT_EVIDENCE_ART__'), 'evidence runtime must expose a stable diagnostic marker');
+assert(!evidenceArtEnhancer.includes('.mysteries'), 'visual evidence enhancement must never inspect hidden mystery identities');
+assert(extraStyles.includes('.evidence-icon.has-evidence-art'), 'approved evidence art must have a visible runtime treatment');
+assert(extraStyles.includes('background-image: var(--evidence-art)'), 'approved evidence art must render through the validated runtime asset variable');
+assert(extraStyles.includes('.evidence-card.is-eliminated .evidence-icon.has-evidence-art::before'), 'eliminated evidence art must keep a non-color-only ruled-out state');
 
 assert(ageGate.includes('AGE_GATE_KEY'), 'age gate must persist 21+ acknowledgement with a stable key');
 assert(ageGate.includes('role="dialog"') && ageGate.includes('aria-modal="true"'), 'age gate must render as an accessible dialog');
