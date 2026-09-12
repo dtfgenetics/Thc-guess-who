@@ -290,6 +290,128 @@ body {
   filter: grayscale(1) brightness(0.75);
 }
 
+/* Approved Who Took It UI frame pack. These are decorative layers only;
+   gameplay labels, portrait alt text, and focus outlines stay native HTML/CSS. */
+:root {
+  --wti-ui-base: url("../assets/ui/suspect-card-frame-normal.webp");
+  --wti-ui-active: url("../assets/ui/suspect-card-frame-active.webp");
+  --wti-ui-eliminated: url("../assets/ui/suspect-card-frame-eliminated.webp");
+  --wti-evidence-frame: url("../assets/ui/evidence-frame-normal.webp");
+  --wti-evidence-active: url("../assets/ui/evidence-frame-active.webp");
+  --wti-question-active: url("../assets/ui/question-chip-active.webp");
+  --wti-question-disabled: url("../assets/ui/question-chip-disabled.webp");
+  --wti-modal-frame: url("../assets/ui/modal-frame.webp");
+  --wti-banner: url("../assets/ui/banner-empty.webp");
+}
+
+.suspect-card {
+  isolation: isolate;
+}
+
+.suspect-card::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: 20px;
+  background: var(--wti-ui-base) center / 100% 100% no-repeat;
+  opacity: 0.82;
+}
+
+.suspect-card:focus-within::before,
+.suspect-card:hover::before {
+  background-image: var(--wti-ui-active);
+  opacity: 0.94;
+}
+
+.suspect-card.is-eliminated::before {
+  background-image: var(--wti-ui-eliminated);
+  opacity: 0.9;
+}
+
+.suspect-main,
+.accuse-chip {
+  position: relative;
+  z-index: 2;
+}
+
+.evidence-card {
+  position: relative;
+  isolation: isolate;
+}
+
+.evidence-card::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  background: var(--wti-evidence-frame) center / 100% 100% no-repeat;
+  opacity: 0.72;
+}
+
+.evidence-card:hover::after,
+.evidence-card:focus-within::after {
+  background-image: var(--wti-evidence-active);
+  opacity: 0.9;
+}
+
+.question-list button {
+  position: relative;
+  isolation: isolate;
+}
+
+.question-list button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--wti-question-active) center / 100% 100% no-repeat;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.question-list button:disabled::after {
+  background-image: var(--wti-question-disabled);
+  opacity: 0.28;
+}
+
+.accusation-drawer,
+.case-resolution {
+  position: relative;
+  isolation: isolate;
+}
+
+.accusation-drawer::before,
+.case-resolution::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 26px;
+  background: var(--wti-modal-frame) center / 100% 100% no-repeat;
+  opacity: 0.7;
+}
+
+.section-title-row {
+  position: relative;
+  isolation: isolate;
+}
+
+.section-title-row::before {
+  content: "";
+  position: absolute;
+  inset: -10px -14px;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--wti-banner) center / 100% 100% no-repeat;
+  opacity: 0.26;
+}
+
 @media (max-width: 620px) {
   .case-nav {
     gap: 10px;
@@ -342,6 +464,14 @@ body {
   .best-lead-action {
     min-height: 52px;
     white-space: normal;
+  }
+
+  .suspect-card::before,
+  .evidence-card::after,
+  .accusation-drawer::before,
+  .case-resolution::before,
+  .section-title-row::before {
+    opacity: 0.55;
   }
 }
 
