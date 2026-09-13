@@ -7,6 +7,7 @@ import EvidenceArtEnhancer from './components/EvidenceArtEnhancer.jsx';
 import UiArtEnhancer from './components/UiArtEnhancer.jsx';
 import './styles.css';
 import './extra.css';
+import './ui-art.css';
 import './age-gate.css';
 
 createRoot(document.getElementById('root')).render(
