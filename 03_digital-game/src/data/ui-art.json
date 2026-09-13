@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "runtimeBase": "assets/ui/",
   "entries": [
     {"id":"suspectCardNormal","asset":"suspect-card-frame-normal.webp","status":"approved"},
@@ -11,6 +11,16 @@
     {"id":"modalFrame","asset":"modal-frame.webp","status":"approved"},
     {"id":"questionChipDisabled","asset":"question-chip-disabled.webp","status":"approved"},
     {"id":"questionChipActive","asset":"question-chip-active.webp","status":"approved"},
-    {"id":"bannerEmpty","asset":"banner-empty.webp","status":"approved"}
+    {"id":"bannerEmpty","asset":"banner-empty.webp","status":"approved"},
+    {"id":"primaryButtonNormal","asset":"primary-button-normal.svg","status":"approved"},
+    {"id":"primaryButtonHover","asset":"primary-button-hover.svg","status":"approved"},
+    {"id":"primaryButtonPressed","asset":"primary-button-pressed.svg","status":"approved"},
+    {"id":"primaryButtonDisabled","asset":"primary-button-disabled.svg","status":"approved"},
+    {"id":"clueSealYes","asset":"clue-seal-yes.svg","status":"approved"},
+    {"id":"clueSealNo","asset":"clue-seal-no.svg","status":"approved"},
+    {"id":"hudStatPanel","asset":"hud-stat-panel.svg","status":"approved"},
+    {"id":"modePillActive","asset":"mode-pill-active.svg","status":"approved"},
+    {"id":"resolutionFrameWin","asset":"resolution-frame-win.svg","status":"approved"},
+    {"id":"resolutionFrameLoss","asset":"resolution-frame-loss.svg","status":"approved"}
   ]
 }
