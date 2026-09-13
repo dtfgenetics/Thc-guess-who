@@ -1,7 +1,6 @@
-/* Manifest-backed UI art integration.
-   These declarations intentionally override the temporary relative URL values
-   in extra.css. Assets remain visually absent until UiArtEnhancer preloads an
-   approved manifest entry and sets the corresponding inline CSS variable. */
+/* Manifest-backed UI art integration. Assets are preloaded by UiArtEnhancer,
+   then injected as CSS variables. Live text remains HTML for accessibility,
+   responsiveness, localization, and crisp rendering. */
 :root {
   --wti-ui-base: none;
   --wti-ui-active: none;
@@ -13,6 +12,16 @@
   --wti-question-disabled: none;
   --wti-question-active: none;
   --wti-banner: none;
+  --wti-primary-button-normal: none;
+  --wti-primary-button-hover: none;
+  --wti-primary-button-pressed: none;
+  --wti-primary-button-disabled: none;
+  --wti-clue-seal-yes: none;
+  --wti-clue-seal-no: none;
+  --wti-hud-stat-panel: none;
+  --wti-mode-pill-active: none;
+  --wti-resolution-frame-win: none;
+  --wti-resolution-frame-loss: none;
 }
 
 html[data-wti-ui-art-status="loading"] .suspect-card::before,
@@ -24,8 +33,6 @@ html[data-wti-ui-art-status="loading"] .section-title-row::before {
   opacity: 0;
 }
 
-/* Use the hidden-mystery frame as a low-contrast thematic backing behind the
-   accusation pairing without covering readable labels or selected values. */
 .accusation-preview {
   position: relative;
   isolation: isolate;
@@ -42,6 +49,98 @@ html[data-wti-ui-art-status="loading"] .section-title-row::before {
   pointer-events: none;
 }
 
+/* Primary actions use one art family while keeping labels in the DOM. */
+.accusation-launch,
+.new-case-button,
+.lock-accusation,
+.pass-button {
+  background-image: var(--wti-primary-button-normal, none);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.accusation-launch:hover,
+.new-case-button:hover,
+.lock-accusation:not(:disabled):hover,
+.pass-button:hover {
+  background-image: var(--wti-primary-button-hover, var(--wti-primary-button-normal, none));
+}
+
+.accusation-launch:active,
+.new-case-button:active,
+.lock-accusation:not(:disabled):active,
+.pass-button:active {
+  background-image: var(--wti-primary-button-pressed, var(--wti-primary-button-normal, none));
+  transform: translateY(1px);
+}
+
+.accusation-launch:disabled,
+.new-case-button:disabled,
+.lock-accusation:disabled,
+.pass-button:disabled {
+  background-image: var(--wti-primary-button-disabled, none);
+  opacity: 0.72;
+}
+
+.mode-pills button.is-active {
+  background-image: var(--wti-mode-pill-active, none);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-color: transparent;
+}
+
+.hud-block {
+  background-image: var(--wti-hud-stat-panel, none);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.clue-answer {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding-left: 54px;
+}
+
+.clue-answer::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translateY(-50%);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.clue-reveal.is-yes .clue-answer::before {
+  background-image: var(--wti-clue-seal-yes, none);
+}
+
+.clue-reveal.is-no .clue-answer::before {
+  background-image: var(--wti-clue-seal-no, none);
+}
+
+.case-resolution {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.case-resolution.is-win {
+  background-image: var(--wti-resolution-frame-win, none);
+}
+
+.case-resolution.is-loss {
+  background-image: var(--wti-resolution-frame-loss, none);
+}
+
 html[data-wti-ui-art-status="partial"] .suspect-card::before,
 html[data-wti-ui-art-status="partial"] .evidence-card::after,
 html[data-wti-ui-art-status="partial"] .question-list button::after,
@@ -49,6 +148,18 @@ html[data-wti-ui-art-status="partial"] .accusation-drawer::before,
 html[data-wti-ui-art-status="partial"] .case-resolution::before,
 html[data-wti-ui-art-status="partial"] .section-title-row::before {
   transition: opacity 120ms ease;
+}
+
+@media (max-width: 700px) {
+  .clue-answer {
+    min-height: 40px;
+    padding-left: 46px;
+  }
+
+  .clue-answer::before {
+    width: 38px;
+    height: 38px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
