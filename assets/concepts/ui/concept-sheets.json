@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "gameId": "who-took-it",
+  "policy": "Review-only concept sheets are stored in Drive; they are not runtime assets and must never be sliced into production files.",
+  "entries": [
+    {
+      "id": "ui-hud-set2-concept-v01",
+      "driveFileId": "14pAyxYzNsBPf82To5jKtctqQr7n_-11Y",
+      "driveFileName": "WTI-UI-HUD-CONCEPT-SHEET-SET2-v01.png",
+      "status": "review-only",
+      "runtimeEligible": false
+    },
+    {
+      "id": "ui-hud-set2-concept-v02",
+      "driveFileId": "1OSQOtAMud9nB_T6pxOob-TSNn7tyCI7S",
+      "driveFileName": "WTI-UI-HUD-CONCEPT-SHEET-SET2-v02.png",
+      "status": "review-only",
+      "runtimeEligible": false
+    }
+  ]
+}
