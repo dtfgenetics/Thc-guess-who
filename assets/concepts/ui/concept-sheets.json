@@ -16,6 +16,13 @@
       "driveFileName": "WTI-UI-HUD-CONCEPT-SHEET-SET2-v02.png",
       "status": "review-only",
       "runtimeEligible": false
+    },
+    {
+      "id": "ui-hud-set2-concept-v03",
+      "driveFileId": "12h4M4pM4KPRuIBzfKugWzwmCtE07WIq_",
+      "driveFileName": "WTI-UI-HUD-CONCEPT-SHEET-SET2-v03.png",
+      "status": "review-only",
+      "runtimeEligible": false
     }
   ]
 }
