@@ -20,16 +20,26 @@ const expectedIds = [
   'modalFrame',
   'questionChipDisabled',
   'questionChipActive',
-  'bannerEmpty'
+  'bannerEmpty',
+  'primaryButtonNormal',
+  'primaryButtonHover',
+  'primaryButtonPressed',
+  'primaryButtonDisabled',
+  'clueSealYes',
+  'clueSealNo',
+  'hudStatPanel',
+  'modePillActive',
+  'resolutionFrameWin',
+  'resolutionFrameLoss'
 ];
 
 const approved = uiArt.entries.filter((entry) => entry.status === 'approved');
-assert.equal(uiArt.schemaVersion, 1, 'UI art manifest schema version must remain 1');
+assert.equal(uiArt.schemaVersion, 2, 'UI art manifest schema version must be 2');
 assert.equal(uiArt.runtimeBase, 'assets/ui/', 'UI runtime base must remain under public assets/ui');
-assert.deepEqual(approved.map((entry) => entry.id).sort(), [...expectedIds].sort(), 'UI art manifest must contain the complete approved v1 pack');
+assert.deepEqual(approved.map((entry) => entry.id).sort(), [...expectedIds].sort(), 'UI art manifest must contain the complete approved v2 pack');
 
 for (const entry of approved) {
-  assert(entry.asset.endsWith('.webp'), `${entry.id} runtime asset must be WebP`);
+  assert(/\.(webp|svg)$/.test(entry.asset), `${entry.id} runtime asset must be WebP or SVG`);
   assert(exists(`public/${uiArt.runtimeBase}${entry.asset}`), `missing runtime UI asset: ${entry.asset}`);
 }
 
@@ -60,7 +70,17 @@ const expectedVariables = [
   '--wti-modal-frame',
   '--wti-question-disabled',
   '--wti-question-active',
-  '--wti-banner'
+  '--wti-banner',
+  '--wti-primary-button-normal',
+  '--wti-primary-button-hover',
+  '--wti-primary-button-pressed',
+  '--wti-primary-button-disabled',
+  '--wti-clue-seal-yes',
+  '--wti-clue-seal-no',
+  '--wti-hud-stat-panel',
+  '--wti-mode-pill-active',
+  '--wti-resolution-frame-win',
+  '--wti-resolution-frame-loss'
 ];
 
 for (const variable of expectedVariables) {
@@ -68,6 +88,13 @@ for (const variable of expectedVariables) {
 }
 
 assert(uiArtCss.includes('var(--wti-mystery-hidden, none)'), 'hidden mystery asset must have a visible runtime use');
+assert(uiArtCss.includes('var(--wti-primary-button-normal, none)'), 'primary button normal asset must have a visible runtime use');
+assert(uiArtCss.includes('var(--wti-clue-seal-yes, none)'), 'yes clue seal must have a visible runtime use');
+assert(uiArtCss.includes('var(--wti-clue-seal-no, none)'), 'no clue seal must have a visible runtime use');
+assert(uiArtCss.includes('var(--wti-hud-stat-panel, none)'), 'HUD panel must have a visible runtime use');
+assert(uiArtCss.includes('var(--wti-mode-pill-active, none)'), 'active mode pill must have a visible runtime use');
+assert(uiArtCss.includes('var(--wti-resolution-frame-win, none)'), 'win resolution frame must have a visible runtime use');
+assert(uiArtCss.includes('var(--wti-resolution-frame-loss, none)'), 'loss resolution frame must have a visible runtime use');
 assert(!uiArtCss.includes('../assets/ui/'), 'manifest-backed UI CSS must not contain direct relative asset URLs');
 assert(extraCss.includes('var(--wti-ui-base)'), 'suspect cards must remain wired to UI art CSS variables');
 assert(extraCss.includes('var(--wti-evidence-frame)'), 'evidence cards must remain wired to UI art CSS variables');
