@@ -1,0 +1,46 @@
+:root {
+  --wti-environment-case-room: none;
+}
+
+/* The case room is atmosphere, not the playfield. Keep it behind every DOM
+   control, low contrast, and center-safe so the suspect grid remains primary. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--wti-environment-case-room, none) center top / cover no-repeat;
+  opacity: 0.16;
+  filter: saturate(0.82) contrast(0.92) brightness(0.72);
+  mask-image: radial-gradient(circle at 50% 44%, rgba(0, 0, 0, 0.35) 0 28%, rgba(0, 0, 0, 0.78) 62%, #000 100%);
+}
+
+.case-app {
+  position: relative;
+  z-index: 1;
+}
+
+html[data-wti-environment-art-status="loading"] body::after {
+  opacity: 0;
+}
+
+html[data-wti-environment-art-status="loaded"] body::after,
+html[data-wti-environment-art-status="partial"] body::after {
+  transition: opacity 180ms ease;
+}
+
+@media (max-width: 760px) {
+  body::after {
+    background-position: 50% top;
+    opacity: 0.11;
+    filter: saturate(0.72) contrast(0.9) brightness(0.66);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-wti-environment-art-status="loaded"] body::after,
+  html[data-wti-environment-art-status="partial"] body::after {
+    transition: none;
+  }
+}
