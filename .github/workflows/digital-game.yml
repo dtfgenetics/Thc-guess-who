@@ -4,10 +4,14 @@ on:
   push:
     paths:
       - '03_digital-game/**'
+      - 'assets/production-manifest.json'
+      - 'assets/characters/**'
       - '.github/workflows/digital-game.yml'
   pull_request:
     paths:
       - '03_digital-game/**'
+      - 'assets/production-manifest.json'
+      - 'assets/characters/**'
       - '.github/workflows/digital-game.yml'
 
 jobs:
