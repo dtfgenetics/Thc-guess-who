@@ -1,13 +1,98 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "gameId": "who-took-it",
   "updated": "2026-09-12",
   "visualDirection": "original humorous cannabis mystery board with distinct silhouettes, inclusive suspects, and evidence-first readability",
+  "assetPolicy": {
+    "runtimeAuthority": "03_digital-game/public/assets",
+    "newSourceMasterAuthority": "Google Drive / THC Guess Who / 08 Visual Assets",
+    "legacySuspectSourceAuthority": "assets/characters/suspects/source",
+    "stateVariants": "Prefer CSS/DOM state treatment over duplicate raster assets when the underlying art does not change.",
+    "conceptSheets": "Review-only; never slice concept sheets into runtime assets."
+  },
   "assets": [
-    {"id":"who-took-it-key-art-v1","kind":"background","status":"review","quantity":1,"priority":"P0","source":"concepts/who-took-it-key-art-v1.png","webPreview":"concepts/who-took-it-key-art-v1.webp","approvalNote":"Strong ensemble direction; not a substitute for the locked individual suspect portrait set."},
-    {"id":"suspect-portraits","kind":"card","status":"complete","quantity":25,"completed":25,"priority":"P0","sourcePattern":"characters/suspects/source/suspect-{001..025}-*-v1.png","webPattern":"characters/suspects/web/suspect-{001..025}-*-v1.webp"},
-    {"id":"item-evidence-masters","kind":"card","status":"complete","quantity":5,"completed":5,"priority":"P0","canonicalIds":["item_bag","item_dabs","item_lighter","item_chocolate_bar","item_gummies"],"sourceAuthority":"Google Drive / THC Guess Who / 08 Visual Assets / 05 Gameplay Objects / 01 Source Masters","runtimePattern":"03_digital-game/public/assets/items/{item-id}.svg","driveRuntimeAuthority":"Google Drive / THC Guess Who / 08 Visual Assets / 05 Gameplay Objects / 02 Runtime Exports","approvalNote":"Exactly one evidence master per canonical item. Runtime state variants remain CSS/DOM driven rather than multiplying art files."},
-    {"id":"suspect-board-frames","kind":"ui","status":"complete","quantity":3,"completed":3,"priority":"P1","runtimePattern":"03_digital-game/public/assets/ui/suspect-card-frame-{normal|active|eliminated}.webp"},
-    {"id":"eliminated-selected-hidden-states","kind":"fx","status":"in-progress","quantity":4,"completed":3,"priority":"P1","approvalNote":"Normal/active/eliminated suspect states and hidden mystery treatment are integrated; dedicated accused/reveal emphasis remains for later VFX polish."}
-  ]
+    {
+      "id": "suspect-portraits",
+      "kind": "character",
+      "status": "complete",
+      "quantity": 25,
+      "completed": 25,
+      "priority": "P0",
+      "sourcePattern": "assets/characters/suspects/source/suspect-{001..025}-*-v1.png",
+      "webPattern": "assets/characters/suspects/web/suspect-{001..025}-*-v1.webp",
+      "runtimePattern": "03_digital-game/public/assets/suspects/suspect_{001..025}.webp",
+      "approvalRegistry": "03_digital-game/src/data/suspect-art.json"
+    },
+    {
+      "id": "item-evidence-masters",
+      "kind": "gameplay-object",
+      "status": "complete",
+      "quantity": 5,
+      "completed": 5,
+      "priority": "P0",
+      "canonicalIds": ["item_bag", "item_dabs", "item_lighter", "item_chocolate_bar", "item_gummies"],
+      "sourceAuthority": "Google Drive / THC Guess Who / 08 Visual Assets / 05 Gameplay Objects / 01 Source Masters",
+      "runtimePattern": "03_digital-game/public/assets/items/{item-id}.svg",
+      "driveRuntimeAuthority": "Google Drive / THC Guess Who / 08 Visual Assets / 05 Gameplay Objects / 02 Runtime Exports",
+      "approvalRegistry": "03_digital-game/src/data/item-art.json"
+    },
+    {
+      "id": "ui-runtime-pack",
+      "kind": "ui",
+      "status": "complete",
+      "quantity": 20,
+      "completed": 20,
+      "priority": "P0",
+      "runtimeBase": "03_digital-game/public/assets/ui",
+      "sourceAuthority": "Google Drive / THC Guess Who / 08 Visual Assets / 06 UI + HUD / 01 Source Masters",
+      "driveRuntimeAuthority": "Google Drive / THC Guess Who / 08 Visual Assets / 06 UI + HUD / 02 Runtime Exports",
+      "approvalRegistry": "03_digital-game/src/data/ui-art.json"
+    },
+    {
+      "id": "case-room-environment",
+      "kind": "environment",
+      "status": "complete",
+      "quantity": 1,
+      "completed": 1,
+      "priority": "P0",
+      "sourceAuthority": "Google Drive / THC Guess Who / 08 Visual Assets / 04 Environments / 01 Source Masters / WTI-ENV-CASE-ROOM-v02.png",
+      "runtime": "03_digital-game/public/assets/environment/case-room.svg",
+      "approvalRegistry": "03_digital-game/src/data/environment-art.json"
+    },
+    {
+      "id": "interactive-state-vfx",
+      "kind": "fx",
+      "status": "complete",
+      "quantity": 4,
+      "completed": 4,
+      "priority": "P1",
+      "implementation": "DOM/CSS",
+      "states": ["selected/active", "eliminated", "hidden mystery", "accusation/resolution reveal"],
+      "approvalNote": "No extra raster files are required. State changes use existing approved frames, semantic classes, and resolution surfaces so accessibility and responsive behavior remain intact."
+    },
+    {
+      "id": "marketing-pack",
+      "kind": "marketing",
+      "status": "complete",
+      "quantity": 5,
+      "completed": 5,
+      "priority": "P2",
+      "sourceAuthority": "Google Drive / THC Guess Who / 09 Marketing",
+      "assets": ["game-hub thumbnail background", "promotional hero", "social square", "social vertical", "OG share"]
+    },
+    {
+      "id": "who-took-it-key-art-v1",
+      "kind": "key-art",
+      "status": "review",
+      "quantity": 1,
+      "completed": 1,
+      "priority": "P2",
+      "optional": true,
+      "source": "assets/concepts/who-took-it-key-art-v1.png",
+      "webPreview": "assets/concepts/who-took-it-key-art-v1.webp",
+      "approvalNote": "Review-only ensemble key art. It does not block the game because the runtime uses the approved individual portraits, environment, and UI systems."
+    }
+  ],
+  "blockingVisualAssetsMissing": 0,
+  "nonBlockingReviewAssets": ["who-took-it-key-art-v1"]
 }
