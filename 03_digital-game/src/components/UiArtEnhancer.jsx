@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import uiArt from '../data/ui-art.json';
 
-const VERSION = 'who-took-it-ui-art-v1';
+const VERSION = 'who-took-it-ui-art-v2';
 
 const CSS_VARIABLE_BY_ID = Object.freeze({
   suspectCardNormal: '--wti-ui-base',
@@ -14,7 +14,17 @@ const CSS_VARIABLE_BY_ID = Object.freeze({
   modalFrame: '--wti-modal-frame',
   questionChipDisabled: '--wti-question-disabled',
   questionChipActive: '--wti-question-active',
-  bannerEmpty: '--wti-banner'
+  bannerEmpty: '--wti-banner',
+  primaryButtonNormal: '--wti-primary-button-normal',
+  primaryButtonHover: '--wti-primary-button-hover',
+  primaryButtonPressed: '--wti-primary-button-pressed',
+  primaryButtonDisabled: '--wti-primary-button-disabled',
+  clueSealYes: '--wti-clue-seal-yes',
+  clueSealNo: '--wti-clue-seal-no',
+  hudStatPanel: '--wti-hud-stat-panel',
+  modePillActive: '--wti-mode-pill-active',
+  resolutionFrameWin: '--wti-resolution-frame-win',
+  resolutionFrameLoss: '--wti-resolution-frame-loss'
 });
 
 function runtimeAssetUrl(filename) {
