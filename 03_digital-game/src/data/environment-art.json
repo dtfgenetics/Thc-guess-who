@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "status": "production-art-approved",
+  "runtimeBase": "assets/environment/",
+  "entries": [
+    {
+      "id": "caseRoom",
+      "asset": "case-room.svg",
+      "status": "approved",
+      "role": "global-case-background",
+      "sourceAuthority": "Google Drive / THC Guess Who / 08 Visual Assets / 04 Environments / 01 Source Masters / WTI-ENV-CASE-ROOM-v02.png"
+    }
+  ]
+}
