@@ -102,7 +102,7 @@ const itemSummary = validateRegistry({
   idKey: 'itemId',
   runtimeBase: 'assets/items/',
   masterFormat: '1024x1024 PNG / WebP',
-  expectedAsset: (item) => `${item.id}.webp`,
+  expectedAsset: (item) => `${item.id}.svg`,
   canonicalCues: (item) => item.tags,
   approvedLabel: '5 evidence masters'
 });
