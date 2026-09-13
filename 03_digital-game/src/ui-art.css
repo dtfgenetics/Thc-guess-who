@@ -1,0 +1,63 @@
+/* Manifest-backed UI art integration.
+   These declarations intentionally override the temporary relative URL values
+   in extra.css. Assets remain visually absent until UiArtEnhancer preloads an
+   approved manifest entry and sets the corresponding inline CSS variable. */
+:root {
+  --wti-ui-base: none;
+  --wti-ui-active: none;
+  --wti-ui-eliminated: none;
+  --wti-mystery-hidden: none;
+  --wti-evidence-frame: none;
+  --wti-evidence-active: none;
+  --wti-modal-frame: none;
+  --wti-question-disabled: none;
+  --wti-question-active: none;
+  --wti-banner: none;
+}
+
+html[data-wti-ui-art-status="loading"] .suspect-card::before,
+html[data-wti-ui-art-status="loading"] .evidence-card::after,
+html[data-wti-ui-art-status="loading"] .question-list button::after,
+html[data-wti-ui-art-status="loading"] .accusation-drawer::before,
+html[data-wti-ui-art-status="loading"] .case-resolution::before,
+html[data-wti-ui-art-status="loading"] .section-title-row::before {
+  opacity: 0;
+}
+
+/* Use the hidden-mystery frame as a low-contrast thematic backing behind the
+   accusation pairing without covering readable labels or selected values. */
+.accusation-preview {
+  position: relative;
+  isolation: isolate;
+}
+
+.accusation-preview::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  z-index: -1;
+  border-radius: 22px;
+  background: var(--wti-mystery-hidden, none) center / cover no-repeat;
+  opacity: 0.11;
+  pointer-events: none;
+}
+
+html[data-wti-ui-art-status="partial"] .suspect-card::before,
+html[data-wti-ui-art-status="partial"] .evidence-card::after,
+html[data-wti-ui-art-status="partial"] .question-list button::after,
+html[data-wti-ui-art-status="partial"] .accusation-drawer::before,
+html[data-wti-ui-art-status="partial"] .case-resolution::before,
+html[data-wti-ui-art-status="partial"] .section-title-row::before {
+  transition: opacity 120ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-wti-ui-art-status="partial"] .suspect-card::before,
+  html[data-wti-ui-art-status="partial"] .evidence-card::after,
+  html[data-wti-ui-art-status="partial"] .question-list button::after,
+  html[data-wti-ui-art-status="partial"] .accusation-drawer::before,
+  html[data-wti-ui-art-status="partial"] .case-resolution::before,
+  html[data-wti-ui-art-status="partial"] .section-title-row::before {
+    transition: none;
+  }
+}
