@@ -1,0 +1,150 @@
+/* Production focus layer for Who Took It?
+   Keeps deduction rules and data untouched while enforcing practical touch targets
+   and reducing nonessential vertical chrome on small screens. */
+
+.ghost-button,
+.mode-pills button,
+.pass-button,
+.accusation-launch,
+.new-case-button,
+.lock-accusation,
+.accuse-chip,
+.category-tabs button,
+.drawer-close,
+select {
+  min-height: 44px;
+}
+
+button,
+select,
+a {
+  touch-action: manipulation;
+}
+
+.accuse-chip {
+  min-width: 64px;
+  padding: 8px 10px;
+}
+
+.category-tabs button {
+  padding: 8px 10px;
+}
+
+.drawer-close {
+  width: 44px;
+  height: 44px;
+}
+
+@media (max-width: 620px) {
+  .case-app {
+    padding-top: 8px;
+  }
+
+  .case-nav {
+    min-height: 56px;
+  }
+
+  .case-hero {
+    padding-top: 22px;
+    padding-bottom: 24px;
+  }
+
+  .case-hero h1 {
+    margin-block: 6px 10px;
+    font-size: clamp(3rem, 15vw, 4.9rem);
+  }
+
+  .case-brief {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    line-height: 1.45;
+  }
+
+  .mode-bar {
+    gap: 8px;
+  }
+
+  .mode-pills {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .mode-pills button {
+    min-width: 0;
+    padding-inline: 7px;
+    font-size: .7rem;
+  }
+
+  .case-workspace {
+    gap: 10px;
+  }
+
+  .section-title-row {
+    gap: 6px;
+  }
+
+  .section-title-row > p {
+    margin-top: 0;
+    font-size: .78rem;
+    line-height: 1.35;
+  }
+
+  .suspect-quote {
+    min-height: 0;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  .detective-rail {
+    gap: 9px;
+  }
+
+  .clue-reveal,
+  .question-deck,
+  .evidence-locker,
+  .history-panel {
+    padding: 13px;
+  }
+
+  .category-tabs {
+    scroll-snap-type: x proximity;
+  }
+
+  .category-tabs button {
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 390px) {
+  .case-brief {
+    -webkit-line-clamp: 2;
+  }
+
+  .suspect-main {
+    min-height: 226px;
+  }
+
+  .suspect-quote {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .category-tabs {
+    scroll-behavior: auto;
+  }
+}
+
+@media (forced-colors: active) {
+  .accuse-chip,
+  .category-tabs button,
+  .ghost-button,
+  .mode-pills button {
+    border: 1px solid ButtonText;
+  }
+}
