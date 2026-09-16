@@ -13,6 +13,7 @@ const errorBoundary = read('src/components/ErrorBoundary.jsx');
 const styles = read('src/styles.css');
 const extraStyles = read('src/extra.css');
 const ageGateStyles = read('src/age-gate.css');
+const productionFocus = read('src/production-focus.css');
 const storage = read('src/engine/storage.js');
 const engine = read('src/engine/gameEngine.js');
 const itemArt = JSON.parse(read('src/data/item-art.json'));
@@ -21,6 +22,7 @@ assert(!exists('src/age-gate.js'), 'DOM-mutating age-gate side-effect script sho
 assert(!exists('src/best-lead-ui.js'), 'DOM-mutating best-lead side-effect script should not exist');
 assert(main.includes('<ErrorBoundary>') && main.includes('</ErrorBoundary>'), 'app must be wrapped in ErrorBoundary');
 assert(main.includes('<AgeGate>') && main.includes('</AgeGate>'), 'app must be wrapped in the React AgeGate component');
+assert(main.includes("import './production-focus.css';"), 'production focus layer must load after the core presentation layers');
 assert(!main.includes("import './age-gate.js';"), 'age gate must not load through a DOM-mutating side-effect script');
 assert(!main.includes("import './best-lead-ui.js';"), 'best-lead assistant must not load through a DOM-mutating side-effect script');
 
@@ -72,6 +74,19 @@ assert(storage.includes('SCHEMA_VERSION'), 'saved game schema version missing');
 assert(storage.includes('isValidSavedSession'), 'saved game validation must be exported and tested');
 assert(storage.includes('ACTIVE_PLAYER_BY_MODE'), 'saved game validation must enforce active player by mode');
 assert(storage.includes('window.localStorage'), 'storage helper must use browser localStorage only behind guards');
+
+for (const marker of [
+  'min-height: 44px',
+  'touch-action: manipulation',
+  '.accuse-chip',
+  '.category-tabs button',
+  '.drawer-close',
+  '@media (max-width: 620px)',
+  '@media (prefers-reduced-motion: reduce)',
+  '@media (forced-colors: active)'
+]) {
+  assert(productionFocus.includes(marker), `production focus layer missing: ${marker}`);
+}
 
 assert(engine.includes('export function scoreQuestionSplit('), 'deduction engine must expose pure question split scoring');
 assert(engine.includes('export function getBestLead('), 'deduction engine must expose best-lead ranking');
