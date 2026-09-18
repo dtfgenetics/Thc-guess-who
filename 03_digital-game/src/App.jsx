@@ -143,7 +143,10 @@ export default function App() {
   );
   const [latestClue, setLatestClue] = useState(savedSession?.latestClue || null);
   const [accusationOpen, setAccusationOpen] = useState(false);
+  const accusationDialogRef = useRef(null);
   const accusationItemRef = useRef(null);
+  const accusationReturnFocusRef = useRef(null);
+  const resolutionDialogRef = useRef(null);
 
   const stateKey = getStateKey(roundState);
   const targetMystery = getTargetMystery(roundState);
@@ -177,6 +180,68 @@ export default function App() {
       latestClue
     });
   }, [mode, roundState, selectedSuspectId, selectedItemId, result, questionCategory, latestClue]);
+
+  useEffect(() => {
+    if (!accusationOpen) return undefined;
+    const dialog = accusationDialogRef.current;
+    if (!dialog) return undefined;
+
+    const focusable = () => [...dialog.querySelectorAll(
+      'button:not([disabled]), select:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+    )];
+
+    window.requestAnimationFrame(() => {
+      const preferred = selectedSuspectId
+        ? accusationItemRef.current
+        : dialog.querySelector('select') || focusable()[0];
+      preferred?.focus({ preventScroll: true });
+    });
+
+    function handleDialogKeyDown(event) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeAccusation();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const controls = focusable();
+      if (!controls.length) return;
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener('keydown', handleDialogKeyDown);
+    return () => document.removeEventListener('keydown', handleDialogKeyDown);
+  }, [accusationOpen]);
+
+  useEffect(() => {
+    if (!result) return undefined;
+    const dialog = resolutionDialogRef.current;
+    if (!dialog) return undefined;
+
+    window.requestAnimationFrame(() => dialog.focus({ preventScroll: true }));
+
+    function keepResolutionFocus(event) {
+      if (event.key !== 'Tab') return;
+      const button = dialog.querySelector('button:not([disabled])');
+      if (!button) return;
+      if ((event.shiftKey && (document.activeElement === dialog || document.activeElement === button))
+        || (!event.shiftKey && document.activeElement === button)) {
+        event.preventDefault();
+        button.focus();
+      }
+    }
+
+    document.addEventListener('keydown', keepResolutionFocus);
+    return () => document.removeEventListener('keydown', keepResolutionFocus);
+  }, [result]);
 
   function startNewGame(nextMode = mode) {
     setMode(nextMode);
@@ -231,17 +296,22 @@ export default function App() {
     updatePlayerSlice('eliminatedItemsByPlayer', toggleEliminated(eliminatedItemIds, itemId));
   }
 
-  function handleQuickAccuse(suspectId) {
+  function openAccusation(suspectId = null) {
     if (result) return;
-    setSelectedSuspectId(suspectId);
+    accusationReturnFocusRef.current = document.activeElement;
+    if (suspectId) setSelectedSuspectId(suspectId);
     setAccusationOpen(true);
+  }
+
+  function closeAccusation() {
+    setAccusationOpen(false);
     window.requestAnimationFrame(() => {
-      const itemSelect = accusationItemRef.current;
-      if (!itemSelect) return;
-      const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-      itemSelect.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'center' });
-      itemSelect.focus({ preventScroll: true });
+      accusationReturnFocusRef.current?.focus?.({ preventScroll: true });
     });
+  }
+
+  function handleQuickAccuse(suspectId) {
+    openAccusation(suspectId);
   }
 
   function handleAccuse() {
@@ -531,21 +601,22 @@ export default function App() {
           <h2>Think you know who took what?</h2>
           <p>Lock in one suspect and one missing item. A wrong accusation ends this case.</p>
         </div>
-        <button type="button" className="accusation-launch" disabled={Boolean(result)} onClick={() => setAccusationOpen(true)}>
+        <button type="button" className="accusation-launch" disabled={Boolean(result)} onClick={() => openAccusation()}>
           Build accusation <span>→</span>
         </button>
       </section>
 
       {accusationOpen ? (
-        <div className="drawer-backdrop" role="presentation" onMouseDown={() => setAccusationOpen(false)}>
+        <div className="drawer-backdrop" role="presentation" onMouseDown={closeAccusation}>
           <section
+            ref={accusationDialogRef}
             className="accusation-drawer"
             role="dialog"
             aria-modal="true"
             aria-labelledby="accusation-title"
             onMouseDown={(event) => event.stopPropagation()}
           >
-            <button className="drawer-close" type="button" aria-label="Close accusation" onClick={() => setAccusationOpen(false)}>×</button>
+            <button className="drawer-close" type="button" aria-label="Close accusation" onClick={closeAccusation}>×</button>
             <p className="section-index">FINAL ACCUSATION</p>
             <h2 id="accusation-title">Put your reputation on it.</h2>
             <p className="drawer-intro">Choose the culprit and the missing item. Once submitted, the case is over.</p>
@@ -598,7 +669,7 @@ export default function App() {
 
       {result ? (
         <div className="resolution-backdrop">
-          <section className={`case-resolution ${result.win ? 'is-win' : 'is-loss'}`} role="dialog" aria-modal="true" aria-labelledby="resolution-title">
+          <section ref={resolutionDialogRef} tabIndex={-1} className={`case-resolution ${result.win ? 'is-win' : 'is-loss'}`} role="dialog" aria-modal="true" aria-labelledby="resolution-title">
             <p className="resolution-kicker">CASE RESOLVED</p>
             <div className="resolution-seal" aria-hidden="true">{result.win ? '✓' : '×'}</div>
             <h2 id="resolution-title">{result.win ? 'You caught the culprit.' : 'The case went cold.'}</h2>
