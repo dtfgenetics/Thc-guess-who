@@ -28,9 +28,17 @@ assert(!main.includes("import './best-lead-ui.js';"), 'best-lead assistant must 
 
 assert(app.includes("import BestLeadAssist from './components/BestLeadAssist.jsx';"), 'BestLeadAssist component must be imported by App');
 assert(app.includes('<BestLeadAssist'), 'best-lead assistant must render inside the React tree');
-assert(app.includes('const accusationItemRef = useRef(null);'), 'quick accusation focus ref missing');
-assert(app.includes("itemSelect.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth'"), 'quick accusation should scroll to the item selector');
-assert(app.includes('itemSelect.focus({ preventScroll: true });'), 'quick accusation should focus the next required field');
+assert(app.includes('const accusationDialogRef = useRef(null);'), 'accusation dialog ref missing');
+assert(app.includes('const accusationItemRef = useRef(null);'), 'quick accusation item focus ref missing');
+assert(app.includes('const accusationReturnFocusRef = useRef(null);'), 'accusation return-focus ref missing');
+assert(app.includes('const resolutionDialogRef = useRef(null);'), 'resolution dialog focus ref missing');
+assert(app.includes("if (event.key === 'Escape')"), 'accusation dialog must close with Escape');
+assert(app.includes("event.key !== 'Tab'"), 'modal focus containment must handle Tab');
+assert(app.includes("dialog.querySelector('select') || focusable()[0]"), 'standard accusation flow must focus the first required control');
+assert(app.includes('accusationItemRef.current'), 'quick accusation must focus the missing-item selector');
+assert(app.includes('accusationReturnFocusRef.current?.focus?.({ preventScroll: true });'), 'closing accusation must restore trigger focus');
+assert(app.includes('window.requestAnimationFrame(() => dialog.focus({ preventScroll: true }))'), 'case resolution dialog must receive focus');
+assert(app.includes('ref={resolutionDialogRef} tabIndex={-1}'), 'resolution dialog must be programmatically focusable');
 assert(app.includes('aria-live="polite"'), 'round status should announce player/remaining changes');
 assert(app.includes('const SHOW_PLAYTEST_TOOLS = import.meta.env.DEV;'), 'mystery reveal tools must be development-only');
 assert(app.includes('{SHOW_PLAYTEST_TOOLS ? ('), 'debug mystery reveal must be gated from production rendering');
