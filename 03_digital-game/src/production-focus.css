@@ -148,3 +148,93 @@ a {
     border: 1px solid ButtonText;
   }
 }
+
+
+/* Who Took It? phone five-column case board.
+   Keeps deduction state/accusation logic unchanged while matching the locked compact-board brief. */
+@media (max-width: 620px) {
+  .suspect-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .suspect-card {
+    border-radius: 9px;
+  }
+
+  .suspect-main {
+    min-height: 108px;
+    gap: 3px;
+    padding: 4px;
+    border-radius: 9px;
+  }
+
+  .dossier-topline {
+    justify-content: center;
+  }
+
+  .coord {
+    width: 22px;
+    height: 19px;
+    border-radius: 5px;
+    font-size: .53rem;
+  }
+
+  .lane-badge,
+  .suspect-quote,
+  .tag-row {
+    display: none;
+  }
+
+  .suspect-avatar {
+    height: 54px;
+    margin: 0;
+    border-radius: 6px;
+    transform: none;
+  }
+
+  .suspect-avatar > img {
+    transform: scale(1.03);
+  }
+
+  .suspect-avatar > b {
+    font-size: .56rem;
+  }
+
+  .suspect-name {
+    min-height: 2.2em;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-size: .56rem;
+    line-height: 1.08;
+    text-align: center;
+    word-break: normal;
+  }
+
+  .eliminated-mark {
+    inset: 3px;
+    border-radius: 7px;
+  }
+
+  /* The full accusation dock stays available; hiding the per-card quick button
+     prevents 25 duplicate 44px controls from overwhelming the compact board. */
+  .suspect-card > .accuse-chip {
+    display: none;
+  }
+}
+
+@media (max-width: 390px) {
+  .suspect-main {
+    min-height: 104px;
+  }
+
+  .suspect-avatar {
+    height: 50px;
+  }
+
+  .suspect-name {
+    font-size: .53rem;
+  }
+}
