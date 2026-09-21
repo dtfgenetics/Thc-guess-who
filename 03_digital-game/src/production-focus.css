@@ -148,3 +148,293 @@ a {
     border: 1px solid ButtonText;
   }
 }
+
+
+/* Who Took It? phone five-column case board.
+   Keeps deduction state/accusation logic unchanged while matching the locked compact-board brief. */
+@media (max-width: 620px) {
+  .suspect-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .suspect-card {
+    border-radius: 9px;
+  }
+
+  .suspect-main {
+    min-height: 108px;
+    gap: 3px;
+    padding: 4px;
+    border-radius: 9px;
+  }
+
+  .dossier-topline {
+    justify-content: center;
+  }
+
+  .coord {
+    width: 22px;
+    height: 19px;
+    border-radius: 5px;
+    font-size: .53rem;
+  }
+
+  .lane-badge,
+  .suspect-quote,
+  .tag-row {
+    display: none;
+  }
+
+  .suspect-avatar {
+    height: 54px;
+    margin: 0;
+    border-radius: 6px;
+    transform: none;
+  }
+
+  .suspect-avatar > img {
+    transform: scale(1.03);
+  }
+
+  .suspect-avatar > b {
+    font-size: .56rem;
+  }
+
+  .suspect-name {
+    min-height: 2.2em;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-size: .56rem;
+    line-height: 1.08;
+    text-align: center;
+    word-break: normal;
+  }
+
+  .eliminated-mark {
+    inset: 3px;
+    border-radius: 7px;
+  }
+
+  /* The full accusation dock stays available; hiding the per-card quick button
+     prevents 25 duplicate 44px controls from overwhelming the compact board. */
+  .suspect-card > .accuse-chip {
+    display: none;
+  }
+}
+
+@media (max-width: 390px) {
+  .suspect-main {
+    min-height: 104px;
+  }
+
+  .suspect-avatar {
+    height: 50px;
+  }
+
+  .suspect-name {
+    font-size: .53rem;
+  }
+}
+
+
+.suspect-inspect {
+  display: none;
+}
+
+.suspect-inspector-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  background: rgba(2, 8, 5, .82);
+  backdrop-filter: blur(10px);
+}
+
+.suspect-inspector {
+  position: relative;
+  width: min(520px, 100%);
+  max-height: min(760px, calc(100dvh - 32px));
+  overflow: auto;
+  display: grid;
+  grid-template-columns: minmax(130px, .85fr) minmax(0, 1.3fr);
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid rgba(225, 235, 211, .24);
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(25, 52, 34, .99), rgba(7, 17, 11, .995));
+  box-shadow: 0 24px 70px rgba(0,0,0,.55);
+}
+
+.suspect-inspector:focus {
+  outline: 0;
+}
+
+.inspector-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(238, 244, 226, .22);
+  border-radius: 999px;
+  background: rgba(5, 13, 8, .86);
+  color: #fff;
+  font-size: 1.35rem;
+}
+
+.inspector-portrait {
+  min-height: 220px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background:
+    radial-gradient(circle at 50% 22%, hsla(var(--avatar-hue), 78%, 75%, .5), transparent 38%),
+    linear-gradient(135deg, hsl(var(--avatar-hue) 41% 27%), hsl(calc(var(--avatar-hue) + 42) 46% 18%));
+}
+
+.inspector-portrait img {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  object-fit: cover;
+  object-position: 50% 25%;
+}
+
+.inspector-copy {
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: 10px;
+  padding: 22px 4px 4px 0;
+}
+
+.inspector-copy h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.55rem, 7vw, 2.35rem);
+  line-height: 1;
+}
+
+.inspector-quote,
+.inspector-status {
+  margin: 0;
+  color: #c9d4c6;
+  line-height: 1.45;
+}
+
+.inspector-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.inspector-tags span {
+  padding: 5px 7px;
+  border: 1px solid rgba(201,244,109,.2);
+  border-radius: 999px;
+  background: rgba(201,244,109,.07);
+  color: #e8f3df;
+  font-size: .68rem;
+  font-weight: 850;
+}
+
+.inspector-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.inspector-actions button {
+  min-height: 44px;
+  padding: 9px;
+  border-radius: 11px;
+  background: #c9f46d;
+  color: #0a140d;
+  font-weight: 950;
+}
+
+.inspector-actions button + button {
+  background: #f2b84b;
+}
+
+@media (max-width: 620px) {
+  .suspect-inspect {
+    position: absolute;
+    z-index: 5;
+    top: 2px;
+    right: 2px;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: start end;
+    padding: 4px 5px;
+    border-radius: 8px;
+    background: linear-gradient(225deg, rgba(7,16,11,.82), rgba(7,16,11,0) 72%);
+    color: #fff;
+    font-size: .85rem;
+    line-height: 1;
+  }
+
+  .suspect-inspector {
+    width: min(430px, 100%);
+    grid-template-columns: minmax(108px, .8fr) minmax(0, 1.2fr);
+    gap: 12px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .inspector-portrait,
+  .inspector-portrait img {
+    min-height: 190px;
+  }
+
+  .inspector-copy {
+    gap: 8px;
+    padding-top: 34px;
+  }
+
+  .inspector-quote,
+  .inspector-status {
+    font-size: .8rem;
+  }
+}
+
+@media (max-width: 390px) {
+  .suspect-inspector {
+    grid-template-columns: 1fr;
+  }
+
+  .inspector-portrait,
+  .inspector-portrait img {
+    min-height: 220px;
+    max-height: 42dvh;
+  }
+
+  .inspector-copy {
+    padding-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .suspect-inspector-backdrop {
+    backdrop-filter: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .suspect-inspector,
+  .suspect-inspect,
+  .inspector-close,
+  .inspector-actions button {
+    border: 2px solid ButtonText !important;
+    background: Canvas !important;
+    color: CanvasText !important;
+  }
+}

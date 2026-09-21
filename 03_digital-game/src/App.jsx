@@ -143,7 +143,10 @@ export default function App() {
   );
   const [latestClue, setLatestClue] = useState(savedSession?.latestClue || null);
   const [accusationOpen, setAccusationOpen] = useState(false);
+  const [inspectedSuspectId, setInspectedSuspectId] = useState('');
   const accusationDialogRef = useRef(null);
+  const inspectorDialogRef = useRef(null);
+  const inspectorReturnFocusRef = useRef(null);
   const accusationItemRef = useRef(null);
   const accusationReturnFocusRef = useRef(null);
   const resolutionDialogRef = useRef(null);
@@ -167,6 +170,7 @@ export default function App() {
     [questionCategory]
   );
   const selectedSuspect = suspects.find((suspect) => suspect.id === selectedSuspectId);
+  const inspectedSuspect = suspects.find((suspect) => suspect.id === inspectedSuspectId);
   const selectedItem = items.find((item) => item.id === selectedItemId);
 
   useEffect(() => {
@@ -180,6 +184,41 @@ export default function App() {
       latestClue
     });
   }, [mode, roundState, selectedSuspectId, selectedItemId, result, questionCategory, latestClue]);
+
+  useEffect(() => {
+    if (!inspectedSuspect) return undefined;
+    const dialog = inspectorDialogRef.current;
+    if (!dialog) return undefined;
+
+    const focusable = () => [...dialog.querySelectorAll(
+      'button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+    )];
+
+    window.requestAnimationFrame(() => dialog.focus({ preventScroll: true }));
+
+    function handleInspectorKeyDown(event) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeSuspectInspector();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const controls = focusable();
+      if (!controls.length) return;
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (event.shiftKey && (document.activeElement === dialog || document.activeElement === first)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener('keydown', handleInspectorKeyDown);
+    return () => document.removeEventListener('keydown', handleInspectorKeyDown);
+  }, [inspectedSuspectId]);
 
   useEffect(() => {
     if (!accusationOpen) return undefined;
@@ -252,6 +291,7 @@ export default function App() {
     setRevealed(false);
     setLatestClue(null);
     setAccusationOpen(false);
+    setInspectedSuspectId('');
   }
 
   function handleModeChange(nextMode) {
@@ -289,6 +329,18 @@ export default function App() {
   function handleToggleSuspect(suspectId) {
     if (result) return;
     updatePlayerSlice('eliminatedByPlayer', toggleEliminated(eliminatedIds, suspectId));
+  }
+
+  function openSuspectInspector(suspectId) {
+    inspectorReturnFocusRef.current = document.activeElement;
+    setInspectedSuspectId(suspectId);
+  }
+
+  function closeSuspectInspector() {
+    setInspectedSuspectId('');
+    window.requestAnimationFrame(() => {
+      inspectorReturnFocusRef.current?.focus?.({ preventScroll: true });
+    });
   }
 
   function handleToggleItem(itemId) {
@@ -465,6 +517,14 @@ export default function App() {
                   >
                     Accuse
                   </button>
+                  <button
+                    type="button"
+                    className="suspect-inspect"
+                    aria-label={`Inspect ${suspect.name} dossier`}
+                    onClick={() => openSuspectInspector(suspect.id)}
+                  >
+                    <span aria-hidden="true">⌕</span>
+                  </button>
                 </article>
               );
             })}
@@ -594,6 +654,54 @@ export default function App() {
           </section>
         </aside>
       </div>
+
+      {inspectedSuspect ? (
+        <div className="suspect-inspector-backdrop" role="presentation" onMouseDown={closeSuspectInspector}>
+          <section
+            ref={inspectorDialogRef}
+            tabIndex={-1}
+            className="suspect-inspector"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="suspect-inspector-title"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <button type="button" className="inspector-close" aria-label="Close suspect dossier" onClick={closeSuspectInspector}>×</button>
+            <div className="inspector-portrait" style={avatarStyle(inspectedSuspect)} aria-hidden="true">
+              {suspectPortrait(inspectedSuspect)
+                ? <img src={suspectPortrait(inspectedSuspect)} alt="" decoding="async" />
+                : <strong>{initials(inspectedSuspect.name)}</strong>}
+            </div>
+            <div className="inspector-copy">
+              <p className="section-index">SUSPECT DOSSIER · {inspectedSuspect.coord}</p>
+              <h2 id="suspect-inspector-title">{inspectedSuspect.name}</h2>
+              <p className="inspector-quote">“{inspectedSuspect.quote}”</p>
+              <div className="inspector-tags" aria-label="Public suspect tags">
+                {inspectedSuspect.publicTags.map((tag) => <span key={tag}>{tag}</span>)}
+              </div>
+              <p className="inspector-status">
+                {eliminatedIds.includes(inspectedSuspect.id) ? 'Ruled out on your board.' : 'Still active on your board.'}
+              </p>
+              <div className="inspector-actions">
+                <button type="button" onClick={() => handleToggleSuspect(inspectedSuspect.id)}>
+                  {eliminatedIds.includes(inspectedSuspect.id) ? 'Restore suspect' : 'Rule out suspect'}
+                </button>
+                <button
+                  type="button"
+                  disabled={Boolean(result)}
+                  onClick={() => {
+                    const suspectId = inspectedSuspect.id;
+                    closeSuspectInspector();
+                    window.requestAnimationFrame(() => openAccusation(suspectId));
+                  }}
+                >
+                  Accuse
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+      ) : null}
 
       <section className="accusation-dock" aria-label="Final accusation">
         <div>
