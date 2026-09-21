@@ -96,6 +96,23 @@ for (const marker of [
   assert(productionFocus.includes(marker), `production focus layer missing: ${marker}`);
 }
 
+assert(productionFocus.includes('phone five-column case board'), 'locked phone case-board treatment must remain present');
+assert.match(
+  productionFocus,
+  /@media \(max-width: 620px\)[\s\S]*\.suspect-grid\s*\{[\s\S]*grid-template-columns:\s*repeat\(5,\s*minmax\(0,\s*1fr\)\)/,
+  'phone portrait must preserve the locked five-column suspect board'
+);
+assert.match(
+  productionFocus,
+  /\.suspect-card > \.accuse-chip\s*\{[\s\S]*display:\s*none/,
+  'compact phone cards must not duplicate 25 full-size quick-accuse controls'
+);
+assert.match(
+  productionFocus,
+  /\.suspect-main\s*\{[\s\S]*min-height:\s*10[48]px/,
+  'compact suspect dossiers must remain comfortably tappable'
+);
+
 assert(engine.includes('export function scoreQuestionSplit('), 'deduction engine must expose pure question split scoring');
 assert(engine.includes('export function getBestLead('), 'deduction engine must expose best-lead ranking');
 assert(engine.includes('(2 * yesCount * noCount) / total'), 'best-lead ranking must use candidate split information rather than hidden mystery state');
