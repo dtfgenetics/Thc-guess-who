@@ -32,6 +32,12 @@ assert(app.includes('const accusationDialogRef = useRef(null);'), 'accusation di
 assert(app.includes('const accusationItemRef = useRef(null);'), 'quick accusation item focus ref missing');
 assert(app.includes('const accusationReturnFocusRef = useRef(null);'), 'accusation return-focus ref missing');
 assert(app.includes('const resolutionDialogRef = useRef(null);'), 'resolution dialog focus ref missing');
+assert(app.includes("const [inspectedSuspectId, setInspectedSuspectId] = useState('');"), 'mobile dossier inspector state missing');
+assert(app.includes('const inspectorDialogRef = useRef(null);'), 'mobile dossier inspector focus ref missing');
+assert(app.includes('aria-label={`Inspect ${suspect.name} dossier`}'), 'compact suspect cards must expose the dossier inspector action');
+assert(app.includes('className="suspect-inspector"'), 'mobile dossier inspector dialog missing');
+assert(app.includes("if (event.key === 'Escape')"), 'modal dialogs must remain Escape dismissible');
+assert(app.includes('inspectorReturnFocusRef.current?.focus?.({ preventScroll: true });'), 'closing dossier inspector must restore trigger focus');
 assert(app.includes("if (event.key === 'Escape')"), 'accusation dialog must close with Escape');
 assert(app.includes("event.key !== 'Tab'"), 'modal focus containment must handle Tab');
 assert(app.includes("dialog.querySelector('select') || focusable()[0]"), 'standard accusation flow must focus the first required control');
@@ -97,6 +103,9 @@ for (const marker of [
 }
 
 assert(productionFocus.includes('phone five-column case board'), 'locked phone case-board treatment must remain present');
+assert(productionFocus.includes('.suspect-inspector-backdrop'), 'mobile dossier inspector backdrop styling missing');
+assert(productionFocus.includes('.suspect-inspect'), 'compact board inspector trigger styling missing');
+assert.match(productionFocus, /@media \(max-width: 620px\)[\s\S]*\.suspect-inspect\s*\{[\s\S]*width:\s*44px[\s\S]*height:\s*44px/, 'phone dossier inspector trigger must keep a 44px touch target');
 assert.match(
   productionFocus,
   /@media \(max-width: 620px\)[\s\S]*\.suspect-grid\s*\{[\s\S]*grid-template-columns:\s*repeat\(5,\s*minmax\(0,\s*1fr\)\)/,
