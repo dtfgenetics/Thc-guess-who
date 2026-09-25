@@ -12,6 +12,7 @@ import './ui-art.css';
 import './environment-art.css';
 import './age-gate.css';
 import './production-focus.css';
+import './accessibility-focus.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
