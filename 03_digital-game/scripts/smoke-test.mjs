@@ -148,6 +148,26 @@ try {
   failures.push(`storage helpers should not throw without browser storage: ${error.message}`);
 }
 
+try {
+  Object.defineProperty(globalThis, 'window', {
+    configurable: true,
+    value: Object.defineProperty({}, 'localStorage', {
+      configurable: true,
+      get() {
+        throw new DOMException('Storage blocked', 'SecurityError');
+      }
+    })
+  });
+  saveGame(validSoloSession);
+  clearSavedGame();
+  const saved = loadSavedGame();
+  if (saved !== null) failures.push('restricted browser storage should recover without a saved session.');
+} catch (error) {
+  failures.push(`restricted browser storage must not break startup: ${error.message}`);
+} finally {
+  delete globalThis.window;
+}
+
 if (failures.length > 0) {
   console.error('Who Took It? smoke test failed:');
   failures.forEach((failure) => console.error(`- ${failure}`));
