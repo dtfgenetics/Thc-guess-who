@@ -47,7 +47,11 @@ export function saveGame(session) {
 
 export function clearSavedGame() {
   if (!canUseStorage()) return;
-  window.localStorage.removeItem(STORAGE_KEY);
+  try {
+    window.localStorage.removeItem(STORAGE_KEY);
+  } catch (error) {
+    console.warn('Unable to clear saved Who Took It? game.', error);
+  }
 }
 
 export function isValidSavedSession(session) {
@@ -94,5 +98,10 @@ function isPlainObject(value) {
 }
 
 function canUseStorage() {
-  return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+  if (typeof window === 'undefined') return false;
+  try {
+    return typeof window.localStorage !== 'undefined';
+  } catch {
+    return false;
+  }
 }
