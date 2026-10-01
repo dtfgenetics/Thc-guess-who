@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "repository": "dtfgenetics/Thc-guess-who",
+  "controlRepository": "dtfgenetics/Thc",
+  "defaultBranch": "main",
+  "canonicalDomains": [
+    "Who Took It game",
+    "Who Took It structured suspect/item/question data",
+    "Who Took It digital implementation",
+    "Who Took It printable prototype sources"
+  ],
+  "sourceRoots": [
+    "00_master/",
+    "01_printable-prototype/",
+    "02_data/",
+    "03_digital-game/",
+    "04_playtest/",
+    "docs/",
+    "AGENTS.md",
+    "README.md"
+  ],
+  "protectedPaths": [
+    ".github/workflows/**",
+    "01_printable-prototype/**"
+  ],
+  "verificationProfiles": {
+    "default": {
+      "commands": [
+        "cd 03_digital-game && npm run check"
+      ],
+      "ciAuthoritative": true
+    },
+    "data": {
+      "commands": [
+        "cd 03_digital-game && npm run validate",
+        "cd 03_digital-game && npm run balance"
+      ],
+      "ciAuthoritative": true
+    },
+    "release": {
+      "commands": [
+        "cd 03_digital-game && npm run check"
+      ],
+      "ciAuthoritative": true
+    }
+  },
+  "production": {
+    "directMutation": false,
+    "integrationOwner": "dtfgenetics/Thc",
+    "route": "/games/who-took-it/",
+    "notes": "Canonical digital changes must pass the nested app check; final art/print approvals and playtest evidence remain separately gated."
+  }
+}

@@ -6,6 +6,7 @@ on:
       - '03_digital-game/**'
       - 'assets/production-manifest.json'
       - 'assets/characters/**'
+      - 'dtf-agent-contract.json'
       - '.github/workflows/digital-game.yml'
   pull_request:
     paths:
@@ -30,6 +31,10 @@ jobs:
           node-version-file: 03_digital-game/.nvmrc
           cache: npm
           cache-dependency-path: 03_digital-game/package-lock.json
+
+      - name: Validate DTF agent contract
+        working-directory: .
+        run: node -e "const c=require('./dtf-agent-contract.json'); if(c.schemaVersion!==1||c.repository!=='dtfgenetics/Thc-guess-who'||!c.verificationProfiles?.default) process.exit(1)"
 
       - name: Install dependencies
         run: npm ci
