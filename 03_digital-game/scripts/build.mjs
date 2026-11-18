@@ -16,7 +16,7 @@ await mkdir(dist, { recursive: true });
 const disableHostTools = {
   name: 'disable-host-tools-in-production',
   setup(buildContext) {
-    buildContext.onResolve({ filter: /^\\.\\/components\\/(?:DebugPanel|PlaytestExport)\\.jsx$/ }, (args) => {
+    buildContext.onResolve({ filter: /DebugPanel|PlaytestExport/ }, (args) => {
       if (!args.importer.endsWith('/src/App.jsx')) return;
       return { path: args.path, namespace: 'disabled-host-tools' };
     });
