@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node scripts/build.mjs --dev",
     "build": "node scripts/build.mjs",
-    "preview": "node scripts/build.mjs --dev",
+    "preview": "node scripts/preview.mjs",
     "validate": "node scripts/validate-data.mjs && node scripts/validate-art-registry.mjs",
     "assets:audit": "node scripts/audit-production-assets.mjs",
     "source:audit": "node scripts/source-audit.mjs",
