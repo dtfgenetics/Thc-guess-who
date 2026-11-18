@@ -3,7 +3,7 @@ import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
-const scannedRoots = ['src', 'index.html', 'package.json', 'vite.config.js'];
+const scannedRoots = ['src', 'index.html', 'package.json', 'scripts/build.mjs', 'scripts/preview.mjs'];
 const blockedTerms = [
   'Harry Potter',
   'Hermione',
