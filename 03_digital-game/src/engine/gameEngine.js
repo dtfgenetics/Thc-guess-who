@@ -11,7 +11,7 @@ export function answerQuestion(mystery, question) {
   }
 
   if (question.target === 'suspect') {
-    return hasTrait(mystery.suspect, question.trait);
+    return question.traits?.length ? question.traits.some((trait) => hasTrait(mystery.suspect, trait)) : hasTrait(mystery.suspect, question.trait);
   }
 
   if (question.target === 'item') {
@@ -60,7 +60,7 @@ export function scoreQuestionSplit(question, remainingSuspects, remainingItems) 
   let yesCount = 0;
   let noCount = 0;
   for (const candidate of candidates) {
-    const yes = question.target === 'itemAny'
+    const yes = (question.target === 'itemAny' || (question.target === 'suspect' && question.traits?.length))
       ? question.traits.some((trait) => hasTrait(candidate, trait))
       : hasTrait(candidate, question.trait);
     if (yes) yesCount += 1;

@@ -66,7 +66,12 @@ export function validateGameData({ suspects, items, questions }) {
     }
 
     if (question.target === 'suspect') {
-      if (!question.trait) errors.push(`${question.id} missing trait.`);
+      if (Array.isArray(question.traits)) {
+        if (!question.traits.length) errors.push(`${question.id} missing suspect traits.`);
+        for (const trait of question.traits) {
+          if (!suspectTraitIds.has(trait)) errors.push(`${question.id} uses suspect trait with no matching suspect: ${trait}.`);
+        }
+      } else if (!question.trait) errors.push(`${question.id} missing trait.`);
       else if (!suspectTraitIds.has(question.trait)) errors.push(`${question.id} uses suspect trait with no matching suspect: ${question.trait}.`);
     }
 

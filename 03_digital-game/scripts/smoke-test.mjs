@@ -70,6 +70,23 @@ for (const question of questions) {
   }
 }
 
+// Grouped suspect clues must be informative and agree with the actual game engine.
+for (const [id, expectedYes] of [
+  ['q_s_carrying', 8], ['q_s_messy', 8], ['q_s_smoke', 7],
+  ['q_s_chaotic', 4], ['q_s_sneaky', 4]
+]) {
+  const question = questions.find((entry) => entry.id === id);
+  if (!question || !Array.isArray(question.traits)) {
+    failures.push(`${id} must be a grouped suspect clue.`);
+    continue;
+  }
+  const actualYes = suspects.filter((suspect) => answerQuestion({ suspect, item: items[0] }, question)).length;
+  const scoredYes = scoreQuestionSplit(question, suspects, items).yesCount;
+  if (actualYes !== expectedYes || scoredYes !== actualYes) {
+    failures.push(`${id} grouped-clue balance mismatch: engine ${actualYes}, scoring ${scoredYes}, expected ${expectedYes}.`);
+  }
+}
+
 const bestLead = getBestLead(questions, suspects, items, new Set());
 if (!bestLead?.question?.id) failures.push('getBestLead must return an unused informative question.');
 if (!(bestLead.expectedEliminations > 0)) failures.push('best lead must eliminate possibilities on average.');
