@@ -40,7 +40,7 @@ if (risky.length > 0) {
 }
 
 function answersYes(entity, question) {
-  if (question.target === 'itemAny') {
+  if (question.target === 'itemAny' || (question.target === 'suspect' && question.traits?.length)) {
     return question.traits.some((trait) => entity.traits?.[trait] === true);
   }
 
