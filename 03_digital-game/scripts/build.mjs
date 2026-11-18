@@ -11,8 +11,25 @@ if (!base.startsWith('/') || !base.endsWith('/')) {
 const dist = resolve('dist');
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
+// Keep host-only reveal and export controls out of the production bundle,
+// including their literal strings and internal implementation code.
+const disableHostTools = {
+  name: 'disable-host-tools-in-production',
+  setup(buildContext) {
+    buildContext.onResolve({ filter: /^\\.\\/components\\/(?:DebugPanel|PlaytestExport)\\.jsx$/ }, (args) => {
+      if (!args.importer.endsWith('/src/App.jsx')) return;
+      return { path: args.path, namespace: 'disabled-host-tools' };
+    });
+    buildContext.onLoad({ filter: /.*/, namespace: 'disabled-host-tools' }, () => ({
+      contents: 'export default function DisabledHostTools() { return null; }',
+      loader: 'js'
+    }));
+  }
+};
+
 const args = {
   entryPoints: ['src/main.jsx'],
+  plugins: dev ? [] : [disableHostTools],
   bundle: true,
   platform: 'browser',
   format: 'esm',
