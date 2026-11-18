@@ -1,5 +1,5 @@
 import { build, context } from 'esbuild';
-import { cp, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 const dev = process.argv.includes('--dev');
@@ -9,6 +9,7 @@ if (!base.startsWith('/') || !base.endsWith('/')) {
 }
 
 const dist = resolve('dist');
+await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
 const args = {
   entryPoints: ['src/main.jsx'],
